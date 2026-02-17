@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 
@@ -22,7 +22,7 @@
             --linen: #F7F3EE; 
             --white: #ffffff;
             --glass: rgba(255, 255, 255, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.4);
+            --border-light: rgba(0, 77, 86, 0.1);
             
             --font-head: 'Playfair Display', serif;
             --font-body: 'Inter', sans-serif;
@@ -38,7 +38,7 @@
 
         /* === Global Resets === */
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { font-family: var(--font-body); background-color: var(--linen); color: var(--deep-teal); padding-bottom: calc(var(--nav-height) + 20px); overflow-x: hidden; line-height: 1.5; }
+        body { font-family: var(--font-body); background-color: var(--linen); color: var(--deep-teal); padding-bottom: calc(var(--nav-height) + 20px); overflow-x: hidden; line-height: 1.6; }
         h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 700; letter-spacing: -0.02em; }
         button { font-family: var(--font-body); border: none; cursor: pointer; outline: none; }
         img { max-width: 100%; height: auto; display: block; }
@@ -46,134 +46,192 @@
         /* === Header === */
         header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 24px; position: sticky; top: 0; z-index: 100;
+            padding: 20px 24px; position: sticky; top: 0; z-index: 100;
             background: rgba(247, 243, 238, 0.85); backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0,0,0,0.03);
+            border-bottom: 1px solid var(--border-light);
         }
-        .logo { font-size: 1.5rem; color: var(--deep-teal); font-weight: 700; letter-spacing: -0.5px; }
-        .logo span { color: var(--earthy-clay); font-family: var(--font-body); font-weight: 500; font-size: 1rem; margin-left: 4px;}
-        .icon-btn { font-size: 1.4rem; color: var(--deep-teal); transition: var(--transition); cursor: pointer; }
-        .icon-btn:hover { transform: scale(1.1); color: var(--earthy-clay); }
+        .logo { font-size: 1.5rem; color: var(--deep-teal); font-weight: 700; letter-spacing: -0.5px; cursor: pointer; }
+        .logo span { color: var(--earthy-clay); font-family: var(--font-body); font-weight: 500; font-size: 1rem; margin-left: 4px; }
+        
+        .header-icons { display: flex; gap: 24px; font-size: 1.3rem; align-items: center; color: var(--deep-teal); }
+        .cart-trigger { position: relative; cursor: pointer; transition: var(--transition); }
+        .cart-trigger:hover { color: var(--earthy-clay); }
+        .cart-count { 
+            position: absolute; top: -8px; right: -8px; background: var(--earthy-clay); 
+            color: white; font-size: 0.7rem; width: 18px; height: 18px; 
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; 
+            font-weight: 600; opacity: 0; transform: scale(0); transition: var(--transition);
+        }
+        .cart-count.active { opacity: 1; transform: scale(1); }
 
         /* === Layout === */
         .content-narrow { max-width: 800px; margin: 0 auto; padding: 0 24px; }
         .content-wide { max-width: 1200px; margin: 0 auto; }
-        .section { display: none; animation: blurIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; filter: blur(4px); transform: translateY(10px); }
+        .section { display: none; animation: blurIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; filter: blur(4px); transform: translateY(10px); }
         .section.active { display: block; }
-
         @keyframes blurIn { to { opacity: 1; filter: blur(0); transform: translateY(0); } }
 
-        /* === Universal AR Button Styling === */
+        /* === Home / Storefront Shared === */
         .ar-trigger-btn {
             background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px);
             color: var(--deep-teal); border: 1px solid rgba(0,77,86,0.1);
             padding: 6px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600;
             display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
-            transition: var(--transition); box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            z-index: 10;
+            transition: var(--transition); box-shadow: 0 4px 10px rgba(0,0,0,0.05); z-index: 10;
         }
         .ar-trigger-btn:hover { background: var(--deep-teal); color: var(--white); transform: translateY(-2px); }
-        .ar-trigger-btn i { font-size: 0.9rem; }
-
-        /* === Bento Grid (Home) === */
+        
+        /* Bento Grid (Home) */
         .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
-        .bento-card {
-            background: var(--white); border-radius: var(--radius-lg); padding: 24px;
-            box-shadow: var(--shadow-soft); position: relative; overflow: hidden;
-            transition: var(--transition); display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
-        }
+        .bento-card { background: var(--white); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-soft); position: relative; overflow: hidden; transition: var(--transition); display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; }
         .bento-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
         .bento-card:active { transform: scale(0.98); }
-
-        .bento-large {
-            grid-column: span 2; height: 320px;
-            background: linear-gradient(to bottom, rgba(0,77,86,0.1), rgba(0,77,86,0.8)), url('https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=1000&q=80');
-            background-size: cover; background-position: center; color: white;
-        }
+        .bento-large { grid-column: span 2; height: 320px; background: linear-gradient(to bottom, rgba(0,77,86,0.1), rgba(0,77,86,0.8)), url('https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=1000&q=80'); background-size: cover; background-position: center; color: white; }
         .bento-tall { grid-row: span 2; background: var(--deep-teal); color: var(--neo-mint); }
-        
         .tag-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         .tag { background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); color: white; padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; height: fit-content; }
-        .bento-tall .tag { background: rgba(168, 230, 207, 0.2); color: var(--neo-mint); }
-
         .img-placeholder { height: 100px; border-radius: var(--radius-md); margin-bottom: 16px; background-size: cover; background-position: center; position: relative; }
-        /* Position AR button inside standard bento cards */
         .bento-card .img-placeholder .ar-trigger-btn { position: absolute; bottom: 8px; right: 8px; }
 
-        /* === Premium Storefront (Search Section) === */
-        .hero {
-            background: linear-gradient(135deg, var(--neo-mint) 0%, #c4f0df 100%);
-            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 60px 24px 120px; position: relative; overflow: hidden;
-        }
+        /* Premium Storefront (Search) */
+        .hero { background: linear-gradient(135deg, var(--neo-mint) 0%, #c4f0df 100%); border-radius: 0 0 var(--radius-lg) var(--radius-lg); display: flex; align-items: center; justify-content: space-between; padding: 60px 24px 120px; position: relative; overflow: hidden; }
         .hero::after { content: ''; position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%); }
         .hero-content { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1100px; margin: 0 auto; z-index: 2; position: relative; }
         .hero-text { display: flex; flex-direction: column; gap: 16px; max-width: 400px; }
         .hero-text h2 { font-size: 1.2rem; font-family: var(--font-body); font-weight: 500; text-transform: uppercase; letter-spacing: 2px; color: var(--deep-teal); opacity: 0.8; }
         .hero-text h1 { font-size: 3.5rem; line-height: 1.1; color: var(--deep-teal); margin-top: -8px; }
         .hero-image img { max-height: 350px; object-fit: contain; border-radius: var(--radius-md); filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1)); }
-
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; padding: 0 24px; margin-top: -80px; position: relative; z-index: 10; }
-        .store-card { background-color: var(--white); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); display: flex; flex-direction: column; transition: var(--transition); border: 1px solid rgba(0,0,0,0.02); }
-        .store-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-5px); }
+        .store-card { background-color: var(--white); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); display: flex; flex-direction: column; transition: var(--transition); border: 1px solid var(--border-light); }
         .store-card h3 { font-size: 1.25rem; margin-bottom: 24px; line-height: 1.3; color: var(--deep-teal); }
-
         .inner-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; flex-grow: 1; }
         .product-block { display: flex; flex-direction: column; cursor: pointer; position: relative; }
         .img-wrapper { border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 12px; aspect-ratio: 1/1; background: var(--linen); position: relative; }
         .product-block img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
         .product-block:hover img { transform: scale(1.08); }
-        
         .product-details { display: flex; flex-direction: column; gap: 4px; }
         .product-details p { font-size: 0.85rem; color: #555; line-height: 1.3; font-weight: 500; transition: var(--transition); }
         .product-block:hover .product-details p { color: var(--earthy-clay); }
-        
-        /* Positioning AR button below the text in storefront */
         .product-block .ar-trigger-btn { margin-top: 6px; width: fit-content; background: var(--linen); border: none; box-shadow: none; color: #666; padding: 4px 8px;}
         .product-block .ar-trigger-btn:hover { background: var(--neo-mint); color: var(--deep-teal); }
 
-        /* === Product Page === */
-        .product-viewer { height: 400px; background: radial-gradient(circle at center, #fff, var(--linen)); border-radius: var(--radius-lg); margin-bottom: 32px; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.02); }
-        .product-viewer model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
-        .ar-badge { position: absolute; top: 20px; right: 20px; background: var(--glass); backdrop-filter: blur(8px); padding: 10px 20px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer; transition: var(--transition); }
-        .ar-badge:hover { background: var(--white); transform: scale(1.05); }
+        /* === Product Detail Page (PDP) === */
+        .breadcrumbs { padding: 20px 24px; max-width: 1300px; margin: 0 auto; font-size: 0.85rem; color: #666; font-weight: 500; }
+        .breadcrumbs a { color: #666; text-decoration: none; transition: var(--transition); }
+        .breadcrumbs a:hover { color: var(--deep-teal); }
 
-        .price { font-size: 1.8rem; color: var(--earthy-clay); font-weight: 600; }
-        .btn-primary { width: 100%; padding: 20px; background: var(--deep-teal); color: var(--white); border-radius: 50px; font-size: 1.1rem; font-weight: 600; transition: var(--transition); box-shadow: 0 10px 20px rgba(0,77,86,0.2); }
-        .btn-primary:hover { background: #003B42; transform: translateY(-2px); box-shadow: 0 15px 25px rgba(0,77,86,0.3); }
+        .pdp-container { max-width: 1300px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
+        
+        .visual-gallery { position: sticky; top: 100px; height: fit-content; }
+        .main-image-container { width: 100%; aspect-ratio: 4/5; background: var(--white); border-radius: var(--radius-lg); overflow: hidden; position: relative; box-shadow: var(--shadow-soft); margin-bottom: 20px; }
+        .main-image-container img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease; }
+        
+        .ar-fab { position: absolute; bottom: 20px; right: 20px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); color: var(--deep-teal); padding: 12px 20px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: var(--transition); border: none; cursor: pointer; }
+        .ar-fab:hover { transform: translateY(-3px) scale(1.02); background: var(--deep-teal); color: var(--white); }
+
+        .thumbnail-strip { display: flex; gap: 12px; }
+        .thumb { width: 80px; height: 80px; border-radius: var(--radius-sm); overflow: hidden; cursor: pointer; border: 2px solid transparent; opacity: 0.6; transition: var(--transition); object-fit: cover; }
+        .thumb:hover { opacity: 1; }
+        .thumb.active { border-color: var(--deep-teal); opacity: 1; }
+
+        .product-info { padding-top: 10px; }
+        .store-link { color: var(--earthy-clay); font-weight: 600; font-size: 0.9rem; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; }
+        .title { font-size: 2.8rem; line-height: 1.1; margin: 10px 0; color: var(--deep-teal); }
+        .rating-block { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; font-size: 0.9rem; }
+        .stars { color: #F59E0B; font-size: 1.1rem; }
+        .reviews-link { color: #555; text-decoration: underline; cursor: pointer; }
+
+        .price-block { display: flex; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+        .discount-badge { background: var(--earthy-clay); color: white; padding: 4px 10px; border-radius: 6px; font-size: 1rem; font-weight: 700; }
+        .current-price { font-size: 2.5rem; font-weight: 700; color: var(--deep-teal); font-family: var(--font-head); }
+        .original-price { font-size: 1.2rem; text-decoration: line-through; color: #888; }
+        .tax-note { font-size: 0.85rem; color: #666; margin-bottom: 24px; }
+
+        .offers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 30px; }
+        .offer-card { background: var(--white); border: 1px solid var(--border-light); padding: 16px; border-radius: var(--radius-md); box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .offer-card i { color: var(--earthy-clay); margin-bottom: 8px; font-size: 1.2rem; }
+        .offer-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; }
+        .offer-desc { font-size: 0.8rem; color: #666; line-height: 1.4; }
+
+        .action-card { background: var(--white); padding: 24px; border-radius: var(--radius-lg); border: 1px solid var(--border-light); box-shadow: var(--shadow-soft); margin-bottom: 40px; }
+        .delivery-status { display: flex; gap: 12px; margin-bottom: 20px; font-size: 0.9rem; color: #444; }
+        .delivery-status i { color: #10B981; font-size: 1.2rem; }
+        .stock-pulse { display: inline-block; width: 8px; height: 8px; background: #10B981; border-radius: 50%; margin-right: 6px; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2); }
+        
+        .btn-group { display: flex; flex-direction: column; gap: 12px; }
+        .btn { padding: 18px; border-radius: 50px; font-size: 1.1rem; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 10px; transition: var(--transition); border: none; cursor: pointer; }
+        .btn-primary { background: var(--deep-teal); color: var(--white); }
+        .btn-primary:hover { background: #003B42; transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,77,86,0.2); }
+        .btn-secondary { background: var(--linen); color: var(--deep-teal); border: 1px solid var(--deep-teal); }
+        .btn-secondary:hover { background: rgba(0,77,86,0.05); }
+
+        .section-title { font-size: 1.5rem; margin-bottom: 16px; border-bottom: 1px solid var(--border-light); padding-bottom: 8px; }
+        .specs-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 0.95rem; }
+        .specs-table th, .specs-table td { padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); text-align: left; }
+        .specs-table th { color: #666; font-weight: 500; width: 40%; }
+        .specs-table td { font-weight: 600; color: var(--deep-teal); }
+        .about-list { list-style: none; }
+        .about-list li { position: relative; padding-left: 24px; margin-bottom: 12px; font-size: 0.95rem; color: #444; }
+        .about-list li::before { content: '✨'; position: absolute; left: 0; top: 2px; font-size: 0.9rem; }
+
+        /* === SLIDE-OUT CART UI === */
+        .cart-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1499; opacity: 0; pointer-events: none; transition: var(--transition); }
+        .cart-overlay.open { opacity: 1; pointer-events: auto; }
+
+        .cart-drawer { position: fixed; top: 0; right: 0; width: 100%; max-width: 420px; height: 100%; background: var(--white); z-index: 1500; box-shadow: -10px 0 40px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; }
+        .cart-drawer.open { transform: translateX(0); }
+
+        .cart-header { padding: 24px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
+        .cart-title { font-size: 1.5rem; font-family: var(--font-head); color: var(--deep-teal); }
+        .close-cart { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666; transition: var(--transition); }
+        .close-cart:hover { color: var(--earthy-clay); transform: rotate(90deg); }
+
+        .cart-items-container { flex: 1; overflow-y: auto; padding: 24px; }
+        .cart-item { display: flex; gap: 16px; margin-bottom: 24px; border-bottom: 1px solid #f0f0f0; padding-bottom: 24px; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .cart-item-img { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; background: #f9f9f9; }
+        .cart-item-info { flex: 1; }
+        .cart-item-title { font-weight: 600; font-size: 1rem; margin-bottom: 4px; color: var(--deep-teal); line-height: 1.2; }
+        .cart-item-variant { font-size: 0.8rem; color: #888; margin-bottom: 8px; }
+        .cart-item-controls { display: flex; justify-content: space-between; align-items: center; }
+        .qty-control { display: flex; align-items: center; gap: 12px; background: #f5f5f5; padding: 4px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; }
+        .qty-btn { cursor: pointer; color: #666; border: none; background: transparent; font-weight: bold; }
+        .qty-btn:hover { color: var(--deep-teal); }
+
+        .empty-cart-msg { text-align: center; margin-top: 50px; color: #888; display: none; }
+        .empty-cart-msg i { font-size: 3rem; margin-bottom: 16px; opacity: 0.3; }
+
+        .cart-footer { padding: 24px; border-top: 1px solid var(--border-light); background: #fcfcfc; }
+        .cart-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 0.95rem; }
+        .total-row { font-size: 1.2rem; font-weight: 700; color: var(--deep-teal); margin-top: 16px; padding-top: 16px; border-top: 1px dashed #ddd; }
+        .checkout-btn { width: 100%; padding: 18px; background: var(--deep-teal); color: white; font-weight: 600; border-radius: 50px; margin-top: 20px; font-size: 1.1rem; transition: var(--transition); border: none; cursor: pointer; }
+        .checkout-btn:hover { background: #003B42; box-shadow: 0 10px 20px rgba(0,77,86,0.15); }
 
         /* === Global AR Modal === */
         .global-ar-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             background: rgba(247, 243, 238, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            transform: scale(0.95);
+            opacity: 0; pointer-events: none; transition: var(--transition); transform: scale(0.95);
         }
         .global-ar-modal.active { opacity: 1; pointer-events: auto; transform: scale(1); }
-        
-        .ar-modal-close {
-            position: absolute; top: 30px; right: 30px; background: var(--white);
-            color: var(--deep-teal); border: none; width: 50px; height: 50px; border-radius: 50%;
-            font-size: 1.5rem; cursor: pointer; box-shadow: var(--shadow-soft); transition: var(--transition);
-            display: flex; justify-content: center; align-items: center; z-index: 2001;
-        }
+        .ar-modal-close { position: absolute; top: 30px; right: 30px; background: var(--white); color: var(--deep-teal); border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: var(--shadow-soft); transition: var(--transition); display: flex; justify-content: center; align-items: center; z-index: 2001; }
         .ar-modal-close:hover { transform: scale(1.1) rotate(90deg); background: var(--earthy-clay); color: white; }
-        
         .global-ar-modal model-viewer { width: 100%; max-width: 800px; height: 70vh; background: transparent; outline: none; }
         .ar-modal-title { position: absolute; bottom: 40px; text-align: center; color: var(--deep-teal); font-family: var(--font-head); font-size: 2rem; z-index: 2001; }
 
         /* === Bottom Navigation === */
         .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height); background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--glass-border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; padding-bottom: 15px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #9CA3AF; text-decoration: none; font-size: 0.75rem; font-weight: 500; gap: 6px; transition: var(--transition); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #9CA3AF; text-decoration: none; font-size: 0.75rem; font-weight: 500; gap: 6px; transition: var(--transition); background: transparent; border: none; cursor: pointer; }
         .nav-item i { font-size: 1.5rem; transition: var(--transition); }
         .nav-item:hover { color: var(--earthy-clay); }
         .nav-item.active { color: var(--deep-teal); }
         .nav-item.active i { transform: translateY(-3px); }
 
-        /* === Responsive Overrides === */
-        @media (max-width: 768px) {
+        /* Responsive Overrides */
+        @media (max-width: 968px) {
+            .pdp-container { grid-template-columns: 1fr; gap: 40px; }
             .hero { padding: 40px 20px 100px; flex-direction: column; text-align: center; }
             .hero-content { flex-direction: column; gap: 40px; }
             .hero-text { align-items: center; }
@@ -187,18 +245,23 @@
 <body>
 
     <header>
-        <div class="logo">Artisana<span>2026</span></div>
-        <div class="icon-btn"><i class="fa-regular fa-bell"></i></div>
+        <div class="logo" onclick="navigateTo('home')">Artisana<span>2026</span></div>
+        <div class="header-icons">
+            <i class="fa-solid fa-magnifying-glass" style="cursor: pointer;" onclick="navigateTo('search')"></i>
+            <div class="cart-trigger" onclick="toggleCart()">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <div class="cart-count" id="cartCount">0</div>
+            </div>
+        </div>
     </header>
 
-    <main class="app-container">
+    <main>
         
         <div id="home-section" class="section active content-narrow">
             <h2 style="margin-top: 16px; font-size: 2rem;">Curated for You</h2>
             <p style="color: #666; font-size: 1rem; margin-bottom: 8px;">Sustainable artisan finds.</p>
 
             <div class="bento-grid">
-                
                 <div class="bento-card bento-large" onclick="handleCardClick('product', event)">
                     <div class="tag-row">
                         <span class="tag">Trending Design</span>
@@ -240,11 +303,11 @@
                     <p style="font-size: 0.9rem; color: var(--earthy-clay); font-weight: 600;">$22</p>
                 </div>
             </div>
+            <div style="height: 40px;"></div>
         </div>
 
         <div id="search-section" class="section">
             <div class="content-wide">
-                
                 <section class="hero">
                     <div class="hero-content">
                         <div class="hero-text">
@@ -312,33 +375,134 @@
             <div style="height: 100px;"></div>
         </div>
 
-        <div id="product-section" class="section content-narrow">
-            <button onclick="navigateTo('home')" style="margin-bottom: 24px; background: transparent; color: #666; font-weight: 500; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-arrow-left"></i> Back to browse
-            </button>
+        <div id="product-section" class="section">
             
-            <div class="product-viewer">
-                <div class="ar-badge"><i class="fa-solid fa-cube"></i> Native AR Active</div>
-                <model-viewer 
-                    src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
-                    ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
-                    alt="A 3D model" ar auto-rotate camera-controls shadow-intensity="1">
-                </model-viewer>
+            <div class="breadcrumbs">
+                <a href="#" onclick="navigateTo('home'); return false;">Home</a> &nbsp;/&nbsp; 
+                <a href="#" onclick="navigateTo('search'); return false;">Sanctuary Essentials</a> &nbsp;/&nbsp; 
+                <span style="color: var(--deep-teal);">Nomad Ceramic Pot</span>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
-                <h2 style="font-size: 2.5rem; line-height: 1.1; color: var(--deep-teal);">Nomad Ceramic Pot</h2>
-                <div class="price">$120</div>
-            </div>
-            <p style="font-size: 1.1rem; color: #555; margin-bottom: 32px;">
-                Crafted from reclaimed clay in the Kyoto prefecture. This piece utilizes ancient glazing techniques blended with modern zero-waste firing processes.
-            </p>
+            <div class="pdp-container">
+                <div class="visual-gallery">
+                    <div class="main-image-container">
+                        <img id="mainImage" src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=800&q=80" alt="Nomad Ceramic Pot Main">
+                        <button class="ar-fab" onclick="openGlobalAR('https://modelviewer.dev/shared-assets/models/Astronaut.glb', 'Nomad Ceramic Pot', event)">
+                            <i class="fa-solid fa-cube"></i> View in AR
+                        </button>
+                    </div>
+                    
+                    <div class="thumbnail-strip">
+                        <img class="thumb active" src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=200&q=80" onclick="changeImage(this, 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=800&q=80')">
+                        <img class="thumb" src="https://images.unsplash.com/photo-1578500494198-246f612d3b3d?auto=format&fit=crop&w=200&q=80" onclick="changeImage(this, 'https://images.unsplash.com/photo-1578500494198-246f612d3b3d?auto=format&fit=crop&w=800&q=80')">
+                        <img class="thumb" src="https://images.unsplash.com/photo-1617361270806-c4ae3c316a3c?auto=format&fit=crop&w=200&q=80" onclick="changeImage(this, 'https://images.unsplash.com/photo-1617361270806-c4ae3c316a3c?auto=format&fit=crop&w=800&q=80')">
+                    </div>
+                </div>
 
-            <button class="btn-primary" onclick="alert('Added to your curated cart.')">Add to Cart</button>
-            <div style="height: 120px;"></div>
+                <div class="product-info">
+                    <a href="#" class="store-link">By Kyoto Studio</a>
+                    <h1 class="title">Nomad Ceramic Pot</h1>
+                    
+                    <div class="rating-block">
+                        <div class="stars">★★★★<span style="color:#ddd">★</span></div>
+                        <span>4.2</span>
+                        <span class="reviews-link">(128 Artisan Reviews)</span>
+                    </div>
+
+                    <div class="price-block">
+                        <span class="discount-badge">-25%</span>
+                        <span class="current-price">$120.00</span>
+                        <span class="original-price">$160.00</span>
+                    </div>
+                    <p class="tax-note">Inclusive of all taxes. Sustainable shipping calculated at checkout.</p>
+
+                    <div class="offers-grid">
+                        <div class="offer-card">
+                            <i class="fa-solid fa-leaf"></i>
+                            <div class="offer-title">Eco-Reward</div>
+                            <div class="offer-desc">Earn 500 Gaia Points for choosing a zero-waste product.</div>
+                        </div>
+                        <div class="offer-card">
+                            <i class="fa-regular fa-credit-card"></i>
+                            <div class="offer-title">Flexible Split</div>
+                            <div class="offer-desc">Pay in 4 interest-free payments of $30.00 with Klarna.</div>
+                        </div>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="delivery-status">
+                            <i class="fa-solid fa-truck-fast"></i>
+                            <div>
+                                <span style="font-weight: 600; color: var(--deep-teal);">Free Carbon-Neutral Delivery</span><br>
+                                Arrives by <b>Thursday, Feb 26</b>
+                            </div>
+                        </div>
+                        
+                        <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 20px;">
+                            <span class="stock-pulse"></span> In Stock
+                        </div>
+
+                        <div class="btn-group">
+                            <button class="btn btn-primary" onclick="addToCart()"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+                            <button class="btn btn-secondary" onclick="toggleCart()">Buy Now</button>
+                        </div>
+                    </div>
+
+                    <h3 class="section-title">Product Specifications</h3>
+                    <table class="specs-table">
+                        <tr><th>Material</th><td>Reclaimed Kyoto Clay</td></tr>
+                        <tr><th>Firing Method</th><td>Zero-Waste Solar Kiln</td></tr>
+                        <tr><th>Dimensions</th><td>8" D x 10" H</td></tr>
+                        <tr><th>Care Instructions</th><td>Hand-wash recommended</td></tr>
+                        <tr><th>Origin</th><td>Handcrafted in Japan</td></tr>
+                    </table>
+
+                    <h3 class="section-title">About this piece</h3>
+                    <ul class="about-list">
+                        <li>The Nomad Ceramic Pot is the ultimate centerpiece for the modern, mindful home. It harnesses ancient Japanese glazing techniques to deliver a truly unique, textured finish.</li>
+                        <li>Designed for versatility, it provides a seamless aesthetic experience whether used as a planter for indoor greenery, a standalone sculptural piece, or elegant storage.</li>
+                        <li>Setting up your space is effortless. This piece integrates beautifully into minimalist, wabi-sabi, or mid-century modern decors without any need for complicated styling.</li>
+                        <li>Featuring a naturally porous clay base, it allows soil to breathe perfectly if used for botanicals, ensuring stable and reliable plant health.</li>
+                        <li>With its advanced zero-waste firing process, your purchase ensures that your home decor remains environmentally conscious.</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="height: 100px;"></div>
         </div>
 
     </main>
+
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <span class="cart-title">Your Cart</span>
+            <button class="close-cart" onclick="toggleCart()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div class="cart-items-container" id="cartItems">
+            <div class="empty-cart-msg" id="emptyCartMsg">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <p>Your cart is empty.</p>
+                <small>Start adding artisan goods!</small>
+            </div>
+            </div>
+
+        <div class="cart-footer">
+            <div class="cart-row">
+                <span>Subtotal</span>
+                <span id="cartSubtotal">$0.00</span>
+            </div>
+            <div class="cart-row" style="color: #10B981;">
+                <span>Sustainability Discount</span>
+                <span>-$0.00</span>
+            </div>
+            <div class="cart-row total-row">
+                <span>Total</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
 
     <div class="global-ar-modal" id="arModal">
         <button class="ar-modal-close" onclick="closeGlobalAR()"><i class="fa-solid fa-xmark"></i></button>
@@ -358,26 +522,26 @@
             
         </model-viewer>
         
-        <h3 class="ar-modal-title" id="arModalTitle" style="bottom: 100px;">Product Preview</h3>
+        <h3 class="ar-modal-title" id="arModalTitle">Product Preview</h3>
     </div>
 
     <nav class="bottom-nav">
-        <a href="#" class="nav-item active" onclick="navigateTo('home'); updateNav(this)">
+        <button class="nav-item active" onclick="navigateTo('home'); updateNav(this)">
             <i class="fa-solid fa-house"></i> Home
-        </a>
-        <a href="#" class="nav-item" onclick="navigateTo('search'); updateNav(this)">
+        </button>
+        <button class="nav-item" onclick="navigateTo('search'); updateNav(this)">
             <i class="fa-solid fa-compass"></i> Discover
-        </a>
-        <a href="#" class="nav-item" onclick="updateNav(this)">
+        </button>
+        <button class="nav-item" onclick="toggleCart()">
             <i class="fa-solid fa-bag-shopping"></i> Cart
-        </a>
-        <a href="#" class="nav-item" onclick="updateNav(this)">
+        </button>
+        <button class="nav-item" onclick="alert('Profile section coming soon!')">
             <i class="fa-regular fa-user"></i> Profile
-        </a>
+        </button>
     </nav>
 
     <script>
-        // Navigation Logic
+        // --- Navigation Logic ---
         function navigateTo(sectionId) {
             document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
             document.getElementById(sectionId + '-section').classList.add('active');
@@ -389,22 +553,38 @@
             element.classList.add('active');
         }
 
-        // Handle Card Clicks vs AR Button Clicks
+        // Prevent clicking AR buttons from navigating to the product page early
         function handleCardClick(sectionId, event) {
-            if(event.target.closest('.ar-trigger-btn')) return;
+            if(event && event.target.closest('.ar-trigger-btn')) return;
             navigateTo(sectionId);
+            // Also reset bottom nav highlights if navigating to product
+            if(sectionId === 'product') {
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            }
         }
 
-        // Global AR Modal Logic
+        // --- Image Gallery Swapper ---
+        function changeImage(element, newSrc) {
+            const mainImg = document.getElementById('mainImage');
+            mainImg.style.opacity = '0.5';
+            setTimeout(() => {
+                mainImg.src = newSrc;
+                mainImg.style.opacity = '1';
+            }, 150);
+            document.querySelectorAll('.thumb').forEach(th => th.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // --- Global AR Modal Logic ---
         function openGlobalAR(modelSrc, title, event) {
-            event.stopPropagation(); 
+            if (event) event.stopPropagation(); 
             
             const modal = document.getElementById('arModal');
             const viewer = document.getElementById('globalModelViewer');
             const titleEl = document.getElementById('arModalTitle');
             
             viewer.src = modelSrc;
-            titleEl.innerText = title;
+            if(titleEl && title) titleEl.innerText = title;
             
             modal.classList.add('active');
         }
@@ -419,6 +599,127 @@
                 viewer.src = ''; 
             }, 500);
         }
+
+        // --- Cart State & Logic ---
+        let cart = [];
+        const productData = {
+            id: 1,
+            title: "Nomad Ceramic Pot",
+            price: 120.00,
+            image: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=200&q=80",
+            variant: "Kyoto Clay / 8 Inch"
+        };
+
+        function toggleCart() {
+            document.getElementById('cartOverlay').classList.toggle('open');
+            document.getElementById('cartDrawer').classList.toggle('open');
+            updateCartUI();
+        }
+
+        function addToCart() {
+            // Check if item exists in cart array
+            const existingItem = cart.find(item => item.id === productData.id);
+            if (existingItem) {
+                existingItem.qty++;
+            } else {
+                cart.push({ ...productData, qty: 1 });
+            }
+            updateCartUI();
+            
+            // Open cart drawer automatically
+            if (!document.getElementById('cartDrawer').classList.contains('open')) {
+                toggleCart();
+            }
+        }
+
+        function updateQty(id, change) {
+            const item = cart.find(x => x.id === id);
+            if (item) {
+                item.qty += change;
+                if (item.qty <= 0) {
+                    cart = cart.filter(x => x.id !== id);
+                }
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cartItems');
+            const emptyMsg = document.getElementById('emptyCartMsg');
+            const countBadge = document.getElementById('cartCount');
+            const subtotalEl = document.getElementById('cartSubtotal');
+            const totalEl = document.getElementById('cartTotal');
+
+            // 1. Update Header Badge
+            const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+            countBadge.innerText = totalQty;
+            if (totalQty > 0) countBadge.classList.add('active');
+            else countBadge.classList.remove('active');
+
+            // 2. Render Cart Items List
+            if (cart.length === 0) {
+                container.innerHTML = '';
+                container.appendChild(emptyMsg);
+                emptyMsg.style.display = 'block';
+                subtotalEl.innerText = "$0.00";
+                totalEl.innerText = "$0.00";
+                return;
+            }
+
+            emptyMsg.style.display = 'none';
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.image}" class="cart-item-img" alt="${item.title}">
+                    <div class="cart-item-info">
+                        <div class="cart-item-title">${item.title}</div>
+                        <div class="cart-item-variant">${item.variant}</div>
+                        <div class="cart-item-controls">
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="updateQty(${item.id}, -1)">−</button>
+                                <span>${item.qty}</span>
+                                <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                            </div>
+                            <div style="font-weight: 600; color: var(--deep-teal);">
+                                $${(item.price * item.qty).toFixed(2)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // 3. Calculate Financial Totals
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            subtotalEl.innerText = `$${subtotal.toFixed(2)}`;
+            totalEl.innerText = `$${subtotal.toFixed(2)}`;
+        }
+
+        // --- Click Outside to Close Cart Feature ---
+        document.addEventListener('click', function(event) {
+            const cartDrawer = document.getElementById('cartDrawer');
+            const cartOverlay = document.getElementById('cartOverlay');
+            const headerCartIcon = document.querySelector('.cart-trigger');
+            
+            // Get the bottom navigation cart button (it's the 3rd item in the nav)
+            const bottomNavCartIcon = document.querySelectorAll('.nav-item')[2];
+
+            // If the cart is open...
+            if (cartDrawer.classList.contains('open')) {
+                // ...and the user clicked OUTSIDE the drawer, OUTSIDE the header icon, and OUTSIDE the bottom nav icon
+                if (!cartDrawer.contains(event.target) && 
+                    !headerCartIcon.contains(event.target) && 
+                    (bottomNavCartIcon && !bottomNavCartIcon.contains(event.target))) {
+                    
+                    // Force close the cart
+                    cartDrawer.classList.remove('open');
+                    cartOverlay.classList.remove('open');
+                }
+            }
+        });
+
+        // Initialize empty cart on load
+        window.onload = () => {
+            updateCartUI();
+        };
     </script>
 </body>
 </html>
