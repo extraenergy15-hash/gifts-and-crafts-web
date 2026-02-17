@@ -3,428 +3,421 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Artisana 2026 | Premium Sustainable Gifting</title>
+    <title>Artisana | Premium Sustainable Gifting</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
     
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- Premium CSS Variables --- */
+        /* === Premium Design System === */
         :root {
             --neo-mint: #A8E6CF;
-            --deep-teal: #004d54; 
-            --earthy-clay: #d16b4e; 
-            --unbleached-linen: #F7EFE5; 
-            --radius-large: 20px;
-            --shadow-premium: 0 10px 40px -10px rgba(0, 77, 84, 0.12);
-            --glass-bg: rgba(255, 255, 255, 0.85); 
-            --glass-border: 1px solid rgba(255, 255, 255, 0.9);
+            --deep-teal: #004D56; 
+            --earthy-clay: #E07A5F;
+            --linen: #F7F3EE; 
+            --white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.4);
             
-            --font-ui: 'Inter', sans-serif;
             --font-head: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+            --shadow-soft: 0 10px 40px -10px rgba(0, 77, 86, 0.08);
+            --shadow-hover: 0 20px 40px -10px rgba(0, 77, 86, 0.15);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --nav-height: 85px;
         }
 
-        /* --- Reset & Base Styles --- */
+        /* === Global Resets === */
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { font-family: var(--font-body); background-color: var(--linen); color: var(--deep-teal); padding-bottom: calc(var(--nav-height) + 20px); overflow-x: hidden; line-height: 1.5; }
+        h1, h2, h3, h4 { font-family: var(--font-head); font-weight: 700; letter-spacing: -0.02em; }
+        button { font-family: var(--font-body); border: none; cursor: pointer; outline: none; }
+        img { max-width: 100%; height: auto; display: block; }
 
-        body {
-            font-family: var(--font-ui);
-            background: linear-gradient(135deg, var(--unbleached-linen) 0%, #ffffff 100%);
-            color: var(--deep-teal);
-            padding-bottom: 100px;
-            overflow-x: hidden;
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        h1, h2, h3 { font-family: var(--font-head); font-weight: 600; line-height: 1.2; color: var(--deep-teal); }
-
-        /* --- Utility Classes --- */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: var(--radius-large);
-            border: var(--glass-border);
-            box-shadow: var(--shadow-premium);
-            padding: 2rem; 
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .glass-panel:hover { transform: translateY(-2px); box-shadow: 0 15px 50px -15px rgba(0, 77, 84, 0.15); }
-
-        .btn {
-            font-family: var(--font-ui);
-            font-weight: 500; font-size: 0.95rem; border: none; border-radius: var(--radius-large);
-            padding: 1rem 1.5rem; cursor: pointer; transition: all 0.2s ease;
-            display: inline-flex; justify-content: center; align-items: center; gap: 8px;
-        }
-        .btn:active { transform: scale(0.98); }
-        
-        .primary-btn { background-color: var(--earthy-clay); color: #fff; width: 100%; box-shadow: 0 4px 15px rgba(209, 107, 78, 0.2); }
-        .primary-btn:hover { background-color: #bd5c40; }
-        .secondary-btn { background-color: transparent; color: var(--deep-teal); border: 1px solid var(--deep-teal); width: 100%; }
-        .secondary-btn:hover { background-color: rgba(0, 77, 84, 0.05); }
-
-        /* --- Header --- */
-        header { padding: 3rem 1.5rem 1.5rem; max-width: 800px; margin: 0 auto; }
-        header h1 { font-size: 2.5rem; letter-spacing: -0.5px; margin-bottom: 0.5rem; }
-        header p { font-size: 1.1rem; opacity: 0.7; font-weight: 300; }
-
-        /* --- Bento Grid Layout --- */
-        .bento-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem; padding: 0 1.5rem 2rem; max-width: 800px; margin: 0 auto;
-        }
-        .span-2 { grid-column: 1 / -1; }
-
-        /* --- Occasion Vault (Horizontal Scroll) --- */
-        .vault-container { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; }
-        .vault-container::-webkit-scrollbar { display: none; }
-        .vault-item {
-            min-width: 140px; padding: 1rem; background: rgba(0, 77, 84, 0.04);
-            border-radius: 12px; border: 1px solid rgba(0, 77, 84, 0.08); cursor: pointer;
-            transition: background 0.2s;
-        }
-        .vault-item:hover { background: rgba(0, 77, 84, 0.08); }
-        .vault-date { font-size: 0.75rem; color: var(--earthy-clay); font-weight: 600; margin-bottom: 4px; display: block; }
-        .vault-title { font-size: 0.9rem; font-weight: 500; }
-
-        /* --- WebAR Product Card Details --- */
-        .product-meta { margin-bottom: 1.5rem; }
-        .product-meta h2 { font-size: 1.8rem; margin-bottom: 0.2rem; }
-        .product-meta p { font-size: 0.9rem; opacity: 0.6; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
-
-        .ar-container {
-            width: 100%; height: 300px; border-radius: 12px; overflow: hidden;
-            margin-bottom: 1.5rem; background-color: #f9f9f9; border: 1px solid rgba(0,0,0,0.05); position: relative;
-        }
-        model-viewer { width: 100%; height: 100%; }
-        .ar-badge {
-            position: absolute; top: 15px; left: 15px; background: rgba(255,255,255,0.9);
-            padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10;
-        }
-        
-        /* --- Toggles (Crowd-Gift & Flex-Gift) --- */
-        .toggle-container, .checkbox-container {
+        /* === Header === */
+        header {
             display: flex; justify-content: space-between; align-items: center;
-            margin: 1rem 0; font-size: 0.95rem; padding: 1rem;
-            background: rgba(0, 77, 84, 0.03); border-radius: 12px; border: 1px solid rgba(0,0,0,0.03);
+            padding: 24px; position: sticky; top: 0; z-index: 100;
+            background: rgba(247, 243, 238, 0.85); backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.03);
         }
-        .checkbox-container { align-items: flex-start; justify-content: flex-start; gap: 12px; cursor: pointer; }
-        .checkbox-container input[type="checkbox"] {
-            margin-top: 4px; width: 18px; height: 18px; accent-color: var(--earthy-clay); cursor: pointer;
-        }
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #cbd5d1; transition: .3s; border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
-            background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        input:checked + .slider { background-color: var(--earthy-clay); }
-        input:checked + .slider:before { transform: translateX(20px); }
+        .logo { font-size: 1.5rem; color: var(--deep-teal); font-weight: 700; letter-spacing: -0.5px; }
+        .logo span { color: var(--earthy-clay); font-family: var(--font-body); font-weight: 500; font-size: 1rem; margin-left: 4px;}
+        .icon-btn { font-size: 1.4rem; color: var(--deep-teal); transition: var(--transition); cursor: pointer; }
+        .icon-btn:hover { transform: scale(1.1); color: var(--earthy-clay); }
 
-        .progress-container { width: 100%; background-color: rgba(0,0,0,0.05); border-radius: 10px; height: 6px; margin-top: 12px; overflow: hidden; }
-        .progress-bar { height: 100%; background-color: var(--earthy-clay); transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+        /* === Layout === */
+        .content-narrow { max-width: 800px; margin: 0 auto; padding: 0 24px; }
+        .content-wide { max-width: 1200px; margin: 0 auto; }
+        .section { display: none; animation: blurIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; filter: blur(4px); transform: translateY(10px); }
+        .section.active { display: block; }
 
-        /* --- Sustainability Tracker Accordion --- */
-        .accordion { margin-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.05); }
-        .accordion-btn {
-            background: transparent; color: var(--deep-teal); cursor: pointer; padding: 1.2rem 0; width: 100%;
-            text-align: left; border: none; font-family: var(--font-ui); font-weight: 500; font-size: 1rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .accordion-panel { padding: 0 0 1.2rem 0; display: none; font-size: 0.9rem; color: rgba(0, 77, 84, 0.8); }
-        .passport-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed rgba(0,0,0,0.1); }
-        .passport-item:last-child { border-bottom: none; }
-        .passport-data { font-family: monospace; color: var(--earthy-clay); font-weight: 600;}
+        @keyframes blurIn { to { opacity: 1; filter: blur(0); transform: translateY(0); } }
 
-        /* --- Green Route Tracker --- */
-        .route-path {
-            position: relative; height: 4px; background: #e0e0e0; border-radius: 2px; margin: 2rem 0 1rem; display: flex; justify-content: space-between;
+        /* === Universal AR Button Styling === */
+        .ar-trigger-btn {
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px);
+            color: var(--deep-teal); border: 1px solid rgba(0,77,86,0.1);
+            padding: 6px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600;
+            display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+            transition: var(--transition); box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            z-index: 10;
         }
-        .route-fill {
-            position: absolute; top: 0; left: 0; height: 100%; background: var(--neo-mint); border-radius: 2px; width: 65%; transition: width 1s ease;
-        }
-        .route-node {
-            width: 12px; height: 12px; background: #fff; border: 2px solid #e0e0e0; border-radius: 50%; position: relative; top: -4px; z-index: 2;
-        }
-        .route-node.active { border-color: var(--neo-mint); background: var(--deep-teal); }
-        .route-vehicle {
-            position: absolute; top: -25px; left: 65%; transform: translateX(-50%);
-            font-size: 1.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: left 1s ease;
-        }
+        .ar-trigger-btn:hover { background: var(--deep-teal); color: var(--white); transform: translateY(-2px); }
+        .ar-trigger-btn i { font-size: 0.9rem; }
 
-        /* --- Memory-Link Video Recorder --- */
-        .video-placeholder {
-            width: 100%; height: 180px; background: rgba(0, 77, 84, 0.02); border: 1px solid rgba(0, 77, 84, 0.1);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; font-size: 0.9rem; color: rgba(0, 77, 84, 0.5);
+        /* === Bento Grid (Home) === */
+        .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+        .bento-card {
+            background: var(--white); border-radius: var(--radius-lg); padding: 24px;
+            box-shadow: var(--shadow-soft); position: relative; overflow: hidden;
+            transition: var(--transition); display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
         }
+        .bento-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+        .bento-card:active { transform: scale(0.98); }
 
-        /* --- GiftGenie AI Widget --- */
-        .fab {
-            position: fixed; bottom: 95px; right: 25px; width: 56px; height: 56px; border-radius: 50%;
-            background: var(--deep-teal); color: #fff; display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; box-shadow: 0 10px 25px rgba(0, 77, 84, 0.3); cursor: pointer; z-index: 1001; transition: transform 0.3s ease;
+        .bento-large {
+            grid-column: span 2; height: 320px;
+            background: linear-gradient(to bottom, rgba(0,77,86,0.1), rgba(0,77,86,0.8)), url('https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=1000&q=80');
+            background-size: cover; background-position: center; color: white;
         }
-        .fab:hover { transform: scale(1.05); }
-        .chat-widget {
-            position: fixed; bottom: 165px; right: 25px; width: calc(100% - 50px); max-width: 380px; height: 400px;
-            display: none; flex-direction: column; z-index: 1002; padding: 0; overflow: hidden; background: rgba(255, 255, 255, 0.95);
-        }
-        .chat-header { font-family: var(--font-head); padding: 1.2rem; background: var(--deep-teal); color: #fff; font-size: 1.1rem; font-weight: 600; }
-        .chat-body { flex-grow: 1; padding: 1.2rem; overflow-y: auto; font-size: 0.9rem; display: flex; flex-direction: column; gap: 12px; }
-        .msg { padding: 10px 14px; border-radius: 12px; max-width: 85%; line-height: 1.4; }
-        .msg.ai { background: rgba(168, 230, 207, 0.3); align-self: flex-start; border-bottom-left-radius: 4px; }
-        .msg.user { background: rgba(0, 77, 84, 0.05); align-self: flex-end; border-bottom-right-radius: 4px; }
-        .chat-input { display: flex; padding: 1rem; border-top: 1px solid rgba(0,0,0,0.05); background: #fff; }
-        .chat-input input { flex-grow: 1; border: 1px solid rgba(0,0,0,0.1); border-radius: 20px; padding: 10px 15px; background: #f9f9f9; outline: none; transition: border 0.2s; }
-        .chat-input input:focus { border-color: var(--neo-mint); }
-        .chat-input button { background: var(--deep-teal); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; margin-left: 10px; cursor: pointer; }
+        .bento-tall { grid-row: span 2; background: var(--deep-teal); color: var(--neo-mint); }
+        
+        .tag-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .tag { background: rgba(255,255,255,0.2); backdrop-filter: blur(4px); color: white; padding: 6px 14px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; height: fit-content; }
+        .bento-tall .tag { background: rgba(168, 230, 207, 0.2); color: var(--neo-mint); }
 
-        /* --- Fixed Bottom Navigation (Thumb Zone) --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 80px; background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.05);
-            display: flex; justify-content: space-around; align-items: center; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -5px 20px rgba(0,0,0,0.02);
+        .img-placeholder { height: 100px; border-radius: var(--radius-md); margin-bottom: 16px; background-size: cover; background-position: center; position: relative; }
+        /* Position AR button inside standard bento cards */
+        .bento-card .img-placeholder .ar-trigger-btn { position: absolute; bottom: 8px; right: 8px; }
+
+        /* === Premium Storefront (Search Section) === */
+        .hero {
+            background: linear-gradient(135deg, var(--neo-mint) 0%, #c4f0df 100%);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 60px 24px 120px; position: relative; overflow: hidden;
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--deep-teal); text-decoration: none; font-size: 0.7rem; font-weight: 500; opacity: 0.4; transition: all 0.2s; }
-        .nav-item.active, .nav-item:hover { opacity: 1; transform: translateY(-2px); }
-        .nav-icon { font-size: 1.4rem; margin-bottom: 4px; }
+        .hero::after { content: ''; position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%); }
+        .hero-content { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1100px; margin: 0 auto; z-index: 2; position: relative; }
+        .hero-text { display: flex; flex-direction: column; gap: 16px; max-width: 400px; }
+        .hero-text h2 { font-size: 1.2rem; font-family: var(--font-body); font-weight: 500; text-transform: uppercase; letter-spacing: 2px; color: var(--deep-teal); opacity: 0.8; }
+        .hero-text h1 { font-size: 3.5rem; line-height: 1.1; color: var(--deep-teal); margin-top: -8px; }
+        .hero-image img { max-height: 350px; object-fit: contain; border-radius: var(--radius-md); filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1)); }
+
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; padding: 0 24px; margin-top: -80px; position: relative; z-index: 10; }
+        .store-card { background-color: var(--white); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); display: flex; flex-direction: column; transition: var(--transition); border: 1px solid rgba(0,0,0,0.02); }
+        .store-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-5px); }
+        .store-card h3 { font-size: 1.25rem; margin-bottom: 24px; line-height: 1.3; color: var(--deep-teal); }
+
+        .inner-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; flex-grow: 1; }
+        .product-block { display: flex; flex-direction: column; cursor: pointer; position: relative; }
+        .img-wrapper { border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 12px; aspect-ratio: 1/1; background: var(--linen); position: relative; }
+        .product-block img { width: 100%; height: 100%; object-fit: cover; transition: var(--transition); }
+        .product-block:hover img { transform: scale(1.08); }
+        
+        .product-details { display: flex; flex-direction: column; gap: 4px; }
+        .product-details p { font-size: 0.85rem; color: #555; line-height: 1.3; font-weight: 500; transition: var(--transition); }
+        .product-block:hover .product-details p { color: var(--earthy-clay); }
+        
+        /* Positioning AR button below the text in storefront */
+        .product-block .ar-trigger-btn { margin-top: 6px; width: fit-content; background: var(--linen); border: none; box-shadow: none; color: #666; padding: 4px 8px;}
+        .product-block .ar-trigger-btn:hover { background: var(--neo-mint); color: var(--deep-teal); }
+
+        /* === Product Page === */
+        .product-viewer { height: 400px; background: radial-gradient(circle at center, #fff, var(--linen)); border-radius: var(--radius-lg); margin-bottom: 32px; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.02); }
+        .product-viewer model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
+        .ar-badge { position: absolute; top: 20px; right: 20px; background: var(--glass); backdrop-filter: blur(8px); padding: 10px 20px; border-radius: 50px; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer; transition: var(--transition); }
+        .ar-badge:hover { background: var(--white); transform: scale(1.05); }
+
+        .price { font-size: 1.8rem; color: var(--earthy-clay); font-weight: 600; }
+        .btn-primary { width: 100%; padding: 20px; background: var(--deep-teal); color: var(--white); border-radius: 50px; font-size: 1.1rem; font-weight: 600; transition: var(--transition); box-shadow: 0 10px 20px rgba(0,77,86,0.2); }
+        .btn-primary:hover { background: #003B42; transform: translateY(-2px); box-shadow: 0 15px 25px rgba(0,77,86,0.3); }
+
+        /* === Global AR Modal === */
+        .global-ar-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: rgba(247, 243, 238, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: scale(0.95);
+        }
+        .global-ar-modal.active { opacity: 1; pointer-events: auto; transform: scale(1); }
+        
+        .ar-modal-close {
+            position: absolute; top: 30px; right: 30px; background: var(--white);
+            color: var(--deep-teal); border: none; width: 50px; height: 50px; border-radius: 50%;
+            font-size: 1.5rem; cursor: pointer; box-shadow: var(--shadow-soft); transition: var(--transition);
+            display: flex; justify-content: center; align-items: center; z-index: 2001;
+        }
+        .ar-modal-close:hover { transform: scale(1.1) rotate(90deg); background: var(--earthy-clay); color: white; }
+        
+        .global-ar-modal model-viewer { width: 100%; max-width: 800px; height: 70vh; background: transparent; outline: none; }
+        .ar-modal-title { position: absolute; bottom: 40px; text-align: center; color: var(--deep-teal); font-family: var(--font-head); font-size: 2rem; z-index: 2001; }
+
+        /* === Bottom Navigation === */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: var(--nav-height); background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--glass-border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; padding-bottom: 15px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #9CA3AF; text-decoration: none; font-size: 0.75rem; font-weight: 500; gap: 6px; transition: var(--transition); }
+        .nav-item i { font-size: 1.5rem; transition: var(--transition); }
+        .nav-item:hover { color: var(--earthy-clay); }
+        .nav-item.active { color: var(--deep-teal); }
+        .nav-item.active i { transform: translateY(-3px); }
+
+        /* === Responsive Overrides === */
+        @media (max-width: 768px) {
+            .hero { padding: 40px 20px 100px; flex-direction: column; text-align: center; }
+            .hero-content { flex-direction: column; gap: 40px; }
+            .hero-text { align-items: center; }
+            .hero-text h1 { font-size: 2.8rem; }
+            .cards-grid { grid-template-columns: 1fr; margin-top: -60px; }
+            .ar-modal-close { top: 20px; right: 20px; width: 40px; height: 40px; font-size: 1.2rem; }
+            .global-ar-modal model-viewer { height: 60vh; }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Artisana</h1>
-        <p>Curated. Sustainable. Meaningful.</p>
+        <div class="logo">Artisana<span>2026</span></div>
+        <div class="icon-btn"><i class="fa-regular fa-bell"></i></div>
     </header>
 
-    <main class="bento-grid">
+    <main class="app-container">
+        
+        <div id="home-section" class="section active content-narrow">
+            <h2 style="margin-top: 16px; font-size: 2rem;">Curated for You</h2>
+            <p style="color: #666; font-size: 1rem; margin-bottom: 8px;">Sustainable artisan finds.</p>
 
-        <div class="bento-item glass-panel span-2" style="padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h3 style="font-size: 1.2rem;">Occasion Vault</h3>
-                <span style="font-size: 0.75rem; color: var(--earthy-clay); font-weight: 600; background: rgba(209, 107, 78, 0.1); padding: 4px 8px; border-radius: 12px;">AI Concierge Active ✨</span>
-            </div>
-            <div class="vault-container">
-                <div class="vault-item" onclick="openChat('Suggest gifts for Mom\'s Birthday')">
-                    <span class="vault-date">IN 12 DAYS</span>
-                    <span class="vault-title">Mom's Birthday</span>
+            <div class="bento-grid">
+                
+                <div class="bento-card bento-large" onclick="handleCardClick('product', event)">
+                    <div class="tag-row">
+                        <span class="tag">Trending Design</span>
+                        <button class="ar-trigger-btn" onclick="openGlobalAR('https://modelviewer.dev/shared-assets/models/Astronaut.glb', 'Nomad Ceramic Set', event)">
+                            <i class="fa-solid fa-cube"></i> View in AR
+                        </button>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 1.8rem; margin-bottom: 4px;">Nomad Ceramic</h3>
+                        <p style="font-size: 1rem; opacity: 0.9; font-family: var(--font-body);">Hand-fired in Kyoto</p>
+                    </div>
                 </div>
-                <div class="vault-item" onclick="openChat('Suggest gifts for 5th Anniversary')">
-                    <span class="vault-date">OCT 14</span>
-                    <span class="vault-title">5th Anniversary</span>
+
+                <div class="bento-card bento-tall" onclick="navigateTo('search')">
+                    <span class="tag"><i class="fa-solid fa-leaf"></i> Eco</span>
+                    <div style="margin-top: auto;">
+                        <h3 style="font-size: 1.5rem;">Explore<br>Collections</h3>
+                        <p style="font-size: 0.85rem; margin-top: 8px; opacity: 0.8; font-family: var(--font-body);">View Storefront &rarr;</p>
+                    </div>
                 </div>
-                <div class="vault-item" style="border-style: dashed; background: transparent; text-align: center; color: rgba(0,77,84,0.6);" onclick="openChat('I want to add a new occasion')">
-                    <span class="vault-date" style="color: inherit;">+ ADD NEW</span>
-                    <span class="vault-title">Log Event</span>
+
+                <div class="bento-card" onclick="handleCardClick('product', event)">
+                    <div class="img-placeholder" style="background-image: url('https://images.unsplash.com/photo-1544367563-12123d815d19?auto=format&fit=crop&w=400&q=80');">
+                        <button class="ar-trigger-btn" onclick="openGlobalAR('https://modelviewer.dev/shared-assets/models/glTF-Sample-Models/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf', 'Cork Yoga Mat', event)">
+                            <i class="fa-solid fa-cube"></i> AR
+                        </button>
+                    </div>
+                    <h4 style="font-size: 1.1rem; color: var(--deep-teal);">Cork Yoga Mat</h4>
+                    <p style="font-size: 0.9rem; color: var(--earthy-clay); font-weight: 600;">$85</p>
+                </div>
+
+                <div class="bento-card" onclick="handleCardClick('product', event)">
+                    <div class="img-placeholder" style="background-image: url('https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=400&q=80');">
+                        <button class="ar-trigger-btn" onclick="openGlobalAR('https://modelviewer.dev/shared-assets/models/shishkebab.glb', 'Vegan Balm', event)">
+                            <i class="fa-solid fa-cube"></i> AR
+                        </button>
+                    </div>
+                    <h4 style="font-size: 1.1rem; color: var(--deep-teal);">Vegan Balm</h4>
+                    <p style="font-size: 0.9rem; color: var(--earthy-clay); font-weight: 600;">$22</p>
                 </div>
             </div>
         </div>
-        
-        <div class="bento-item glass-panel span-2">
-            
-            <div class="product-meta">
-                <p>Studio Kin, Kyoto</p>
-                <h2>Hand-Glazed Matcha Bowl</h2>
+
+        <div id="search-section" class="section">
+            <div class="content-wide">
+                
+                <section class="hero">
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <h2>The Artisan Edit</h2>
+                            <h1>Woven &<br>Wonder</h1>
+                            <p style="font-family: var(--font-body); font-size: 1.1rem; color: var(--deep-teal); opacity: 0.8; margin-top: 10px;">
+                                Discover ethically sourced textiles and ceramics for your modern sanctuary.
+                            </p>
+                        </div>
+                        <div class="hero-image">
+                            <img src="https://images.unsplash.com/photo-1617361270806-c4ae3c316a3c?auto=format&fit=crop&w=600&q=80" alt="Ceramic Vases">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="cards-grid">
+                    <div class="store-card">
+                        <h3>Sanctuary Essentials</h3>
+                        <div class="inner-grid">
+                            
+                            <div class="product-block" onclick="handleCardClick('product', event)">
+                                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1522771730849-478c24f46487?auto=format&fit=crop&w=300&q=80" alt="Linens"></div>
+                                <div class="product-details">
+                                    <p>Organic Linens</p>
+                                    <button class="ar-trigger-btn" onclick="openGlobalAR('https://modelviewer.dev/shared-assets/models/Astronaut.glb', 'Organic Linens', event)">
+                                        <i class="fa-solid fa-cube"></i> View in AR
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="product-block" onclick="handleCardClick('product', event)">
+                                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=300&q=80" alt="Vases"></div>
+                                <div class="product-details">
+                                    <p>Clay Ceramics</p>
+                                    <button class="ar-trigger-btn" onclick="openGlobalAR('https://modelviewer.dev/shared-assets/models/glTF-Sample-Models/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf', 'Clay Ceramics', event)">
+                                        <i class="fa-solid fa-cube"></i> View in AR
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="product-block" onclick="handleCardClick('product', event)">
+                                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?auto=format&fit=crop&w=300&q=80" alt="Baskets"></div>
+                                <div class="product-details">
+                                    <p>Woven Baskets</p>
+                                    <button class="ar-trigger-btn" onclick="openGlobalAR('https://modelviewer.dev/shared-assets/models/shishkebab.glb', 'Woven Baskets', event)">
+                                        <i class="fa-solid fa-cube"></i> View in AR
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="product-block" onclick="handleCardClick('product', event)">
+                                <div class="img-wrapper"><img src="https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=300&q=80" alt="Lighting"></div>
+                                <div class="product-details">
+                                    <p>Ambient Lighting</p>
+                                    <button class="ar-trigger-btn" onclick="openGlobalAR('https://modelviewer.dev/shared-assets/models/Astronaut.glb', 'Ambient Lighting', event)">
+                                        <i class="fa-solid fa-cube"></i> View in AR
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
             </div>
+            <div style="height: 100px;"></div>
+        </div>
+
+        <div id="product-section" class="section content-narrow">
+            <button onclick="navigateTo('home')" style="margin-bottom: 24px; background: transparent; color: #666; font-weight: 500; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-arrow-left"></i> Back to browse
+            </button>
             
-            <div class="ar-container">
-                <div class="ar-badge">AR Ready</div>
-                <model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz" alt="3D model" ar auto-rotate camera-controls shadow-intensity="1" environment-image="neutral">
-                    <button slot="ar-button" class="btn secondary-btn" style="position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); width: calc(100% - 30px); background: rgba(255,255,255,0.9); backdrop-filter: blur(4px);">
-                        View in Your Space
-                    </button>
+            <div class="product-viewer">
+                <div class="ar-badge"><i class="fa-solid fa-cube"></i> Native AR Active</div>
+                <model-viewer 
+                    src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
+                    ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
+                    alt="A 3D model" ar auto-rotate camera-controls shadow-intensity="1">
                 </model-viewer>
             </div>
 
-            <div class="toggle-container">
-                <div>
-                    <strong style="display: block;">Enable Crowd-Gifting</strong>
-                    <span style="font-size: 0.8rem; opacity: 0.7;">Split the cost with friends</span>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" id="crowd-toggle">
-                    <span class="slider"></span>
-                </label>
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                <h2 style="font-size: 2.5rem; line-height: 1.1; color: var(--deep-teal);">Nomad Ceramic Pot</h2>
+                <div class="price">$120</div>
             </div>
+            <p style="font-size: 1.1rem; color: #555; margin-bottom: 32px;">
+                Crafted from reclaimed clay in the Kyoto prefecture. This piece utilizes ancient glazing techniques blended with modern zero-waste firing processes.
+            </p>
 
-            <label class="checkbox-container">
-                <input type="checkbox" id="flex-gift-toggle">
-                <div>
-                    <strong style="display: block; color: var(--deep-teal);">Enable Flex-Gift™ (Pre-Shipment Swap)</strong>
-                    <span style="font-size: 0.8rem; opacity: 0.7;">Recipient can discreetly confirm or swap colors via SMS before dispatch. Eliminates return CO2.</span>
-                </div>
-            </label>
-
-            <div id="action-container">
-                <button class="btn primary-btn">Purchase — $120.00</button>
-            </div>
-
-            <div class="accordion">
-                <button class="accordion-btn">Digital Passport <span style="font-size: 1.2rem; font-weight: 300;">+</span></button>
-                <div class="accordion-panel">
-                    <div class="passport-item"><span>Artisan</span><strong>Yumi Tanaka, Kyoto</strong></div>
-                    <div class="passport-item"><span>Footprint</span><strong>1.2kg CO2e (Offset)</strong></div>
-                    <div class="passport-item"><span>Ledger ID</span><span class="passport-data">0x8F3a...9bC2</span></div>
-                    <p style="margin-top: 12px; color: #2e7d32; font-size: 0.8rem; display: flex; align-items: center; gap: 5px;">
-                        ✓ Verifiable Sustainable Materials
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bento-item glass-panel span-2">
-            <h3 style="margin-bottom: 0.2rem; font-size: 1.4rem;">Order #892A — In Transit</h3>
-            <p style="font-size: 0.85rem; opacity: 0.7;">Last-Mile Green Route Tracker</p>
-            
-            <div class="route-path">
-                <div class="route-fill"></div>
-                <div class="route-vehicle">🚲</div>
-                <div class="route-node active"></div>
-                <div class="route-node active"></div>
-                <div class="route-node active"></div>
-                <div class="route-node"></div>
-            </div>
-            
-            <div style="background: rgba(168, 230, 207, 0.2); padding: 1rem; border-radius: 12px; font-size: 0.85rem;">
-                <strong style="display: block; color: #2e7d32; margin-bottom: 4px;">🌿 Eco-Delivery Active</strong>
-                Your package was consolidated and is currently on an e-cargo bike out for neighborhood delivery. 
-                <br><strong>Saved vs. Standard: 4.5kg CO2e</strong>
-            </div>
-        </div>
-
-        <div class="bento-item glass-panel span-2">
-            <h3 style="margin-bottom: 0.5rem; font-size: 1.4rem;">Add a Memory-Link</h3>
-            <p style="font-size: 0.9rem; margin-bottom: 1.5rem; opacity: 0.8;">Record a personal video message. It will be attached to a QR code inside the physical gift box.</p>
-            <div class="video-placeholder" id="video-feed"><span>Camera feed inactive</span></div>
-            <button class="btn secondary-btn" id="record-btn">Tap to Record Message</button>
+            <button class="btn-primary" onclick="alert('Added to your curated cart.')">Add to Cart</button>
+            <div style="height: 120px;"></div>
         </div>
 
     </main>
 
-    <div class="fab" id="fab-btn">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M8 10h.01"></path><path d="M12 10h.01"></path><path d="M16 10h.01"></path></svg>
-    </div>
-    
-    <div class="glass-panel chat-widget" id="chat-widget">
-        <div class="chat-header">GiftGenie AI Assistant</div>
-        <div class="chat-body" id="chat-body">
-            <div class="msg ai">Welcome. Tell me a bit about who you're buying for today. Or select an occasion from your vault!</div>
-        </div>
-        <div class="chat-input">
-            <input type="text" id="chat-input-field" placeholder="Ask GiftGenie...">
-            <button id="chat-send">↑</button>
-        </div>
+    <div class="global-ar-modal" id="arModal">
+        <button class="ar-modal-close" onclick="closeGlobalAR()"><i class="fa-solid fa-xmark"></i></button>
+        
+        <model-viewer id="globalModelViewer" 
+            src="" 
+            ar 
+            ar-modes="webxr scene-viewer quick-look" 
+            camera-controls 
+            auto-rotate 
+            shadow-intensity="1" 
+            exposure="1.2">
+            
+            <button slot="ar-button" style="background-color: var(--deep-teal); color: white; border-radius: 50px; border: none; padding: 12px 24px; font-family: var(--font-body); font-weight: 600; position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer;">
+                <i class="fa-solid fa-camera"></i> View in your space
+            </button>
+            
+        </model-viewer>
+        
+        <h3 class="ar-modal-title" id="arModalTitle" style="bottom: 100px;">Product Preview</h3>
     </div>
 
     <nav class="bottom-nav">
-        <a href="#" class="nav-item active"><span class="nav-icon">⌂</span><span>Home</span></a>
-        <a href="#" class="nav-item"><span class="nav-icon">⚲</span><span>Discover</span></a>
-        <a href="#" class="nav-item"><span class="nav-icon">🛒</span><span>Cart</span></a>
-        <a href="#" class="nav-item"><span class="nav-icon">👤</span><span>Profile</span></a>
+        <a href="#" class="nav-item active" onclick="navigateTo('home'); updateNav(this)">
+            <i class="fa-solid fa-house"></i> Home
+        </a>
+        <a href="#" class="nav-item" onclick="navigateTo('search'); updateNav(this)">
+            <i class="fa-solid fa-compass"></i> Discover
+        </a>
+        <a href="#" class="nav-item" onclick="updateNav(this)">
+            <i class="fa-solid fa-bag-shopping"></i> Cart
+        </a>
+        <a href="#" class="nav-item" onclick="updateNav(this)">
+            <i class="fa-regular fa-user"></i> Profile
+        </a>
     </nav>
 
     <script>
-        // --- Crowd-Gift Toggle Logic ---
-        const crowdToggle = document.getElementById('crowd-toggle');
-        const flexToggle = document.getElementById('flex-gift-toggle');
-        const actionContainer = document.getElementById('action-container');
-
-        function updateActionState() {
-            if (crowdToggle.checked) {
-                actionContainer.innerHTML = `
-                    <div style="margin-top: 15px;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 600;">
-                            <span>$45 Raised</span><span style="opacity: 0.5;">Goal: $120</span>
-                        </div>
-                        <div class="progress-container"><div class="progress-bar" style="width: 37%;"></div></div>
-                        <button class="btn primary-btn" style="margin-top: 15px;">Contribute to Fund</button>
-                    </div>`;
-            } else {
-                let btnText = flexToggle.checked ? "Setup Flex-Gift — $120.00" : "Purchase — $120.00";
-                actionContainer.innerHTML = `<button class="btn primary-btn">${btnText}</button>`;
-            }
+        // Navigation Logic
+        function navigateTo(sectionId) {
+            document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+            document.getElementById(sectionId + '-section').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        
-        crowdToggle.addEventListener('change', updateActionState);
-        flexToggle.addEventListener('change', updateActionState);
 
-        // --- Sustainability Accordion Logic ---
-        const accBtn = document.querySelector('.accordion-btn');
-        const accPanel = document.querySelector('.accordion-panel');
-        accBtn.addEventListener('click', () => {
-            const isBlock = accPanel.style.display === 'block';
-            accPanel.style.display = isBlock ? 'none' : 'block';
-            accBtn.innerHTML = `Digital Passport <span style="font-size: 1.2rem; font-weight: 300;">${isBlock ? '+' : '-'}</span>`;
-        });
-
-        // --- Memory-Link Recording Mockup ---
-        const recordBtn = document.getElementById('record-btn');
-        const videoFeed = document.getElementById('video-feed');
-        recordBtn.addEventListener('click', () => {
-            if (recordBtn.dataset.recording === "true") return;
-            recordBtn.dataset.recording = "true";
-            recordBtn.innerText = "Recording... (Please wait 3s)";
-            recordBtn.style.backgroundColor = "var(--earthy-clay)";
-            recordBtn.style.color = "white"; recordBtn.style.border = "none";
-            videoFeed.innerHTML = "<span style='color: var(--earthy-clay); font-weight: 500;'>● Recording Active</span>";
-            videoFeed.style.border = "1px solid var(--earthy-clay)";
-            setTimeout(() => {
-                videoFeed.innerHTML = "<span style='color: var(--deep-teal);'>✓ Video Encrypted & Saved</span>";
-                videoFeed.style.border = "1px solid var(--neo-mint)";
-                recordBtn.innerText = "Video Attached";
-                recordBtn.style.backgroundColor = "var(--neo-mint)";
-                recordBtn.style.color = "var(--deep-teal)"; recordBtn.disabled = true;
-            }, 3000);
-        });
-
-        // --- GiftGenie AI Chat Logic ---
-        const fabBtn = document.getElementById('fab-btn');
-        const chatWidget = document.getElementById('chat-widget');
-        const chatSend = document.getElementById('chat-send');
-        const chatInput = document.getElementById('chat-input-field');
-        const chatBody = document.getElementById('chat-body');
-
-        function toggleChat() {
-            const isHidden = window.getComputedStyle(chatWidget).display === 'none';
-            chatWidget.style.display = isHidden ? 'flex' : 'none';
-            if(isHidden) chatInput.focus();
+        function updateNav(element) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
         }
-        fabBtn.addEventListener('click', toggleChat);
 
-        function handleChat(forcedText = null) {
-            const val = forcedText || chatInput.value.trim();
-            if (!val) return;
+        // Handle Card Clicks vs AR Button Clicks
+        function handleCardClick(sectionId, event) {
+            if(event.target.closest('.ar-trigger-btn')) return;
+            navigateTo(sectionId);
+        }
+
+        // Global AR Modal Logic
+        function openGlobalAR(modelSrc, title, event) {
+            event.stopPropagation(); 
             
-            if (forcedText && window.getComputedStyle(chatWidget).display === 'none') {
-                toggleChat();
-            }
-
-            const userMsg = document.createElement('div');
-            userMsg.className = 'msg user'; userMsg.innerText = val;
-            chatBody.appendChild(userMsg); chatInput.value = ''; chatBody.scrollTop = chatBody.scrollHeight;
-
-            setTimeout(() => {
-                const aiMsg = document.createElement('div');
-                aiMsg.className = 'msg ai';
-                aiMsg.innerText = `Analyzing intent for "${val}"... Let me pull up some tailored sustainable recommendations from the vault.`;
-                chatBody.appendChild(aiMsg); chatBody.scrollTop = chatBody.scrollHeight;
-            }, 1000);
+            const modal = document.getElementById('arModal');
+            const viewer = document.getElementById('globalModelViewer');
+            const titleEl = document.getElementById('arModalTitle');
+            
+            viewer.src = modelSrc;
+            titleEl.innerText = title;
+            
+            modal.classList.add('active');
         }
 
-        chatSend.addEventListener('click', () => handleChat());
-        chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleChat(); });
-
-        // Global function for the Vault items to interact with the Chat
-        window.openChat = function(query) {
-            handleChat(query);
+        function closeGlobalAR() {
+            const modal = document.getElementById('arModal');
+            const viewer = document.getElementById('globalModelViewer');
+            
+            modal.classList.remove('active');
+            
+            setTimeout(() => {
+                viewer.src = ''; 
+            }, 500);
         }
     </script>
 </body>
