@@ -103,21 +103,35 @@
         
         /* === Search Bar UI === */
         .search-bar-container { 
-            max-width: 800px; margin: -40px auto 40px; padding: 0 24px; position: relative; z-index: 9999; 
+            max-width: 800px; 
+            margin: -40px auto 40px; 
+            padding: 0 24px; 
+            position: relative; 
+            z-index: 9999; /* Massively increased to prevent invisible overlaps */
         }
         .search-input-wrapper { 
-            background: var(--white); border-radius: 50px; padding: 16px 24px; 
-            display: flex; align-items: center; gap: 16px; 
-            box-shadow: 0 15px 35px rgba(0,77,86,0.1); border: 1px solid var(--border-light); 
-            transition: var(--transition);
+            background: var(--white); 
+            border-radius: 50px; 
+            padding: 0 24px; 
+            display: flex; 
+            align-items: center; 
+            gap: 16px; 
+            box-shadow: 0 15px 35px rgba(0,77,86,0.1); 
+            border: 1px solid var(--border-light); 
+            transition: var(--transition); 
         }
         .search-input-wrapper:focus-within { 
-            box-shadow: 0 20px 40px rgba(0,77,86,0.15); transform: translateY(-2px); border-color: var(--deep-teal); 
+            box-shadow: 0 20px 40px rgba(0,77,86,0.15); 
+            transform: translateY(-2px); 
+            border-color: var(--deep-teal); 
         }
-        .search-input-wrapper i { color: var(--earthy-clay); font-size: 1.2rem; }
+        .search-input-wrapper i { 
+            color: var(--earthy-clay); font-size: 1.2rem; 
+        }
         .search-input-wrapper input { 
             flex: 1; border: none; outline: none; font-size: 1.1rem; 
-            font-family: var(--font-body); color: var(--deep-teal); background: transparent; width: 100%;
+            font-family: var(--font-body); color: var(--deep-teal); background: transparent; 
+            padding: 18px 0; width: 100%;
         }
         .search-input-wrapper input::placeholder { color: #aaa; }
 
@@ -410,35 +424,7 @@
                 <div class="search-bar-container">
                     <div class="search-input-wrapper">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        
-                        <input type="text" id="discoverSearch" placeholder="Search ceramics, linens, or lighting..." autocomplete="off" oninput="
-                            var query = this.value.toLowerCase().trim();
-                            var cards = document.querySelectorAll('.store-card');
-                            var total = 0;
-                            
-                            cards.forEach(function(card) {
-                                var cardHasMatch = false;
-                                var prods = card.querySelectorAll('.product-block');
-                                
-                                prods.forEach(function(p) {
-                                    var title = p.querySelector('.product-details p');
-                                    if (title && title.innerText.toLowerCase().indexOf(query) > -1) {
-                                        p.style.display = 'flex';
-                                        cardHasMatch = true;
-                                        total++;
-                                    } else {
-                                        p.style.display = 'none';
-                                    }
-                                });
-                                
-                                card.style.display = cardHasMatch ? 'flex' : 'none';
-                            });
-                            
-                            var noRes = document.getElementById('noResultsMsg');
-                            if(noRes) {
-                                noRes.style.display = (total === 0 && query !== '') ? 'block' : 'none';
-                            }
-                        ">
+                        <input type="text" id="discoverSearch" placeholder="Search ceramics, linens, or lighting..." autocomplete="off" onkeyup="searchProducts()" oninput="searchProducts()">
                     </div>
                 </div>
 
@@ -770,22 +756,75 @@
 
     <script>
         // ==========================================
+        // 100% BULLETPROOF SEARCH FUNCTION
+        // ==========================================
+        function searchProducts() {
+            var input = document.getElementById('discoverSearch');
+            if (!input) return; // Failsafe if input doesn't exist
+
+            var filter = input.value.toLowerCase().trim();
+            var storeCards = document.getElementsByClassName('store-card');
+            var noResultsMsg = document.getElementById('noResultsMsg');
+            var totalMatches = 0;
+
+            // Loop through all category cards
+            for (var i = 0; i < storeCards.length; i++) {
+                var card = storeCards[i];
+                var products = card.getElementsByClassName('product-block');
+                var cardHasMatch = false;
+
+                // Loop through products inside this card
+                for (var j = 0; j < products.length; j++) {
+                    var product = products[j];
+                    var titleEl = product.querySelector('.product-details p');
+                    
+                    if (titleEl) {
+                        var titleText = titleEl.innerText || titleEl.textContent;
+                        
+                        // Check if typed text matches product title
+                        if (titleText.toLowerCase().indexOf(filter) > -1) {
+                            product.style.display = "flex";
+                            cardHasMatch = true;
+                            totalMatches++;
+                        } else {
+                            product.style.display = "none";
+                        }
+                    }
+                }
+
+                // Show/hide category card based on if it has matching products
+                if (cardHasMatch) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            }
+
+            // Show or hide the "No Results" text
+            if (noResultsMsg) {
+                if (totalMatches === 0 && filter !== "") {
+                    noResultsMsg.style.display = "block";
+                } else {
+                    noResultsMsg.style.display = "none";
+                }
+            }
+        }
+
+        // ==========================================
         // UI & NAVIGATION FUNCTIONS
         // ==========================================
         function navigateTo(sectionId) {
-            var sections = document.querySelectorAll('.section');
-            for(var i=0; i<sections.length; i++) {
-                sections[i].classList.remove('active');
-            }
+            document.querySelectorAll('.section').forEach(function(el) {
+                el.classList.remove('active');
+            });
             document.getElementById(sectionId + '-section').classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function updateNav(element) {
-            var navItems = document.querySelectorAll('.nav-item');
-            for(var i=0; i<navItems.length; i++) {
-                navItems[i].classList.remove('active');
-            }
+            document.querySelectorAll('.nav-item').forEach(function(el) {
+                el.classList.remove('active');
+            });
             if(element && !element.classList.contains('cart-nav-btn')){
                 element.classList.add('active');
             }
@@ -806,10 +845,9 @@
             if(event && event.target.closest('.ar-trigger-btn')) return;
             navigateTo(sectionId);
             if(sectionId === 'product') {
-                var navItems = document.querySelectorAll('.nav-item');
-                for(var i=0; i<navItems.length; i++) {
-                    navItems[i].classList.remove('active');
-                }
+                document.querySelectorAll('.nav-item').forEach(function(el) {
+                    el.classList.remove('active');
+                });
             }
         }
 
@@ -820,10 +858,9 @@
                 mainImg.src = newSrc;
                 mainImg.style.opacity = '1';
             }, 150);
-            var thumbs = document.querySelectorAll('.thumb');
-            for(var i=0; i<thumbs.length; i++) {
-                thumbs[i].classList.remove('active');
-            }
+            document.querySelectorAll('.thumb').forEach(function(th) {
+                th.classList.remove('active');
+            });
             element.classList.add('active');
         }
 
@@ -866,11 +903,7 @@
         }
 
         function addToCart() {
-            var existingItem = null;
-            for(var i=0; i<cart.length; i++) {
-                if(cart[i].id === productData.id) existingItem = cart[i];
-            }
-
+            var existingItem = cart.find(function(item) { return item.id === productData.id; });
             if (existingItem) {
                 existingItem.qty++;
             } else {
@@ -884,13 +917,11 @@
         }
 
         function updateQty(id, change) {
-            for(var i=0; i<cart.length; i++) {
-                if(cart[i].id === id) {
-                    cart[i].qty += change;
-                    if(cart[i].qty <= 0) {
-                        cart.splice(i, 1);
-                    }
-                    break;
+            var item = cart.find(function(x) { return x.id === id; });
+            if (item) {
+                item.qty += change;
+                if (item.qty <= 0) {
+                    cart = cart.filter(function(x) { return x.id !== id; });
                 }
             }
             updateCartUI();
@@ -903,15 +934,9 @@
             var subtotalEl = document.getElementById('cartSubtotal');
             var totalEl = document.getElementById('cartTotal');
 
-            var totalQty = 0;
-            var subtotal = 0;
-
-            for(var i=0; i<cart.length; i++) {
-                totalQty += cart[i].qty;
-                subtotal += (cart[i].price * cart[i].qty);
-            }
-
+            var totalQty = cart.reduce(function(acc, item) { return acc + item.qty; }, 0);
             countBadge.innerText = totalQty;
+            
             if (totalQty > 0) countBadge.classList.add('active');
             else countBadge.classList.remove('active');
 
@@ -925,11 +950,8 @@
             }
 
             emptyMsg.style.display = 'none';
-            
-            var html = '';
-            for(var j=0; j<cart.length; j++) {
-                var item = cart[j];
-                html += '<div class="cart-item">' +
+            container.innerHTML = cart.map(function(item) {
+                return '<div class="cart-item">' +
                     '<img src="' + item.image + '" class="cart-item-img" alt="' + item.title + '">' +
                     '<div class="cart-item-info">' +
                         '<div class="cart-item-title">' + item.title + '</div>' +
@@ -946,9 +968,9 @@
                         '</div>' +
                     '</div>' +
                 '</div>';
-            }
-            container.innerHTML = html;
+            }).join('');
 
+            var subtotal = cart.reduce(function(acc, item) { return acc + (item.price * item.qty); }, 0);
             subtotalEl.innerText = '$' + subtotal.toFixed(2);
             totalEl.innerText = '$' + subtotal.toFixed(2);
         }
