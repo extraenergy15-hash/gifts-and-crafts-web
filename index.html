@@ -382,11 +382,11 @@
                 <div class="search-bar-container">
                     <div class="search-input-wrapper">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="discoverSearch" placeholder="Search ceramics, linens, or lighting..." onkeyup="filterProducts()">
+                        <input type="text" id="discoverSearch" placeholder="Search ceramics, linens, or lighting..." oninput="filterProducts()">
                     </div>
                 </div>
 
-                <section class="cards-grid" id="storeGrid">
+                <section class="cards-grid">
                     
                     <div class="store-card">
                         <h3>Sanctuary Essentials</h3>
@@ -752,28 +752,40 @@
             }
         }
 
-        // --- Search/Filter Logic ---
+        // --- 🔍 Discover Storefront Search Logic ---
         function filterProducts() {
-            const query = document.getElementById('discoverSearch').value.toLowerCase();
+            const searchInput = document.getElementById('discoverSearch');
+            if (!searchInput) return;
+
+            // Get the user's search text, lowercase it, and remove extra spaces
+            const query = searchInput.value.toLowerCase().trim();
             const cards = document.querySelectorAll('.store-card');
             let totalVisibleProducts = 0;
 
+            // Loop through each category card
             cards.forEach(card => {
                 const products = card.querySelectorAll('.product-block');
                 let cardHasVisibleProduct = false;
 
+                // Loop through each product inside the category
                 products.forEach(product => {
-                    const title = product.querySelector('.product-details p').innerText.toLowerCase();
-                    if (title.includes(query)) {
-                        product.style.display = 'flex';
-                        cardHasVisibleProduct = true;
-                        totalVisibleProducts++;
-                    } else {
-                        product.style.display = 'none';
+                    const titleElement = product.querySelector('.product-details p');
+                    
+                    if (titleElement) {
+                        const title = titleElement.textContent.toLowerCase();
+                        
+                        // If the product title contains the search query
+                        if (title.includes(query)) {
+                            product.style.display = 'flex'; // Show product
+                            cardHasVisibleProduct = true;
+                            totalVisibleProducts++;
+                        } else {
+                            product.style.display = 'none'; // Hide product
+                        }
                     }
                 });
 
-                // Hide category card if all its items are filtered out
+                // If no products match in this category, hide the whole category card
                 if (cardHasVisibleProduct) {
                     card.style.display = 'flex';
                 } else {
@@ -781,12 +793,14 @@
                 }
             });
 
-            // Toggle No Results Message
+            // Toggle the "No Results" message
             const noResultsMsg = document.getElementById('noResultsMsg');
-            if (totalVisibleProducts === 0) {
-                noResultsMsg.style.display = 'block';
-            } else {
-                noResultsMsg.style.display = 'none';
+            if (noResultsMsg) {
+                if (totalVisibleProducts === 0 && query !== "") {
+                    noResultsMsg.style.display = 'block';
+                } else {
+                    noResultsMsg.style.display = 'none';
+                }
             }
         }
 
