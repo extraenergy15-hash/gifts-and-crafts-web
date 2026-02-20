@@ -288,7 +288,7 @@
         .nav-item.active { color: var(--deep-teal); }
         .nav-item.active i { transform: translateY(-3px); }
 
-        /* === Auth Modal (Bulletproof Fix) === */
+        /* === Auth Modal & Verification === */
         .auth-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 99998; opacity: 0; visibility: hidden; pointer-events: none; transition: var(--transition); }
         .auth-overlay.open { opacity: 1; visibility: visible; pointer-events: auto; }
         
@@ -318,8 +318,18 @@
         .auth-footer a { color: var(--earthy-clay); font-weight: 600; text-decoration: none; transition: var(--transition); }
         .auth-footer a:hover { color: var(--deep-teal); }
 
-        .close-auth { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666; transition: var(--transition); }
+        .close-auth { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666; transition: var(--transition); z-index: 10; }
         .close-auth:hover { color: var(--earthy-clay); transform: rotate(90deg); }
+
+        /* Verification Code Specific Styles */
+        .verification-code-container { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+        .verify-input { 
+            width: 60px; height: 60px; padding: 0; text-align: center; font-size: 1.5rem; 
+            font-weight: 700; border-radius: 16px; font-family: var(--font-body); 
+            background: var(--linen); border: 1px solid var(--border-light); color: var(--deep-teal);
+            transition: var(--transition); outline: none;
+        }
+        .verify-input:focus { border-color: var(--deep-teal); background: var(--white); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,77,86,0.05); }
 
         /* Responsive Overrides */
         @media (max-width: 968px) {
@@ -332,6 +342,7 @@
             .ar-modal-close { top: 20px; right: 20px; width: 40px; height: 40px; font-size: 1.2rem; }
             .global-ar-modal model-viewer { height: 60vh; }
             .profile-grid { grid-template-columns: 1fr; }
+            .verify-input { width: 50px; height: 50px; font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -349,7 +360,6 @@
     </header>
 
     <main>
-        
         <div id="home-section" class="section active content-narrow">
             <h2 style="margin-top: 16px; font-size: 2rem;">Curated for You</h2>
             <p style="color: #666; font-size: 1rem; margin-bottom: 8px;">Sustainable artisan finds.</p>
@@ -504,7 +514,6 @@
         </div>
 
         <div id="product-section" class="section">
-            
             <div class="breadcrumbs">
                 <a href="#" onclick="window.navigateTo('home'); return false;">Home</a> &nbsp;/&nbsp; 
                 <a href="#" onclick="window.navigateTo('search'); return false;">Sanctuary Essentials</a> &nbsp;/&nbsp; 
@@ -726,56 +735,65 @@
 
     <div class="global-ar-modal" id="arModal">
         <button type="button" class="ar-modal-close" onclick="window.closeGlobalAR()"><i class="fa-solid fa-xmark"></i></button>
-        
-        <model-viewer id="globalModelViewer" 
-            src="" 
-            ar 
-            ar-modes="webxr scene-viewer quick-look" 
-            camera-controls 
-            auto-rotate 
-            shadow-intensity="1" 
-            exposure="1.2">
-            
+        <model-viewer id="globalModelViewer" src="" ar ar-modes="webxr scene-viewer quick-look" camera-controls auto-rotate shadow-intensity="1" exposure="1.2">
             <button type="button" slot="ar-button" style="background-color: var(--deep-teal); color: white; border-radius: 50px; border: none; padding: 12px 24px; font-family: var(--font-body); font-weight: 600; position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer;">
                 <i class="fa-solid fa-camera"></i> View in your space
             </button>
-            
         </model-viewer>
-        
         <h3 class="ar-modal-title" id="arModalTitle">Product Preview</h3>
     </div>
 
     <div class="auth-overlay" id="authOverlay" onclick="window.toggleAuth(event)"></div>
     <div class="auth-modal" id="authModal">
         <button type="button" class="close-auth" onclick="window.toggleAuth(event)"><i class="fa-solid fa-xmark"></i></button>
-        
         <div class="logo" style="margin-bottom: 24px;">Artisana<span>2026</span></div>
         
-        <div class="auth-header">
-            <h2>Welcome Back</h2>
-            <p>Log in to access your sanctuary.</p>
-        </div>
-        
-        <form onsubmit="window.processLogin(event);">
-            <div class="auth-input-group">
-                <input type="email" class="auth-input" placeholder="Email address" required>
-            </div>
-            <div class="auth-input-group">
-                <input type="password" class="auth-input" placeholder="Password" required>
+        <div id="authStep1">
+            <div class="auth-header">
+                <h2>Welcome Back</h2>
+                <p>Log in to access your sanctuary.</p>
             </div>
             
-            <button type="submit" class="auth-btn">Log In</button>
-        </form>
-        
-        <div class="auth-divider">Or continue with</div>
-        
-        <button type="button" class="social-btn">
-            <i class="fa-brands fa-google"></i> Google
-        </button>
-        
-        <div class="auth-footer">
-            New here? <a href="#" onclick="event.preventDefault();">Create an account</a>
+            <form onsubmit="window.handleAuthStep1(event);">
+                <div class="auth-input-group">
+                    <input type="email" id="authEmailInput" class="auth-input" placeholder="Email address" required>
+                </div>
+                <div class="auth-input-group">
+                    <input type="password" class="auth-input" placeholder="Password" required>
+                </div>
+                <button type="submit" class="auth-btn">Sign In</button>
+            </form>
+            
+            <div class="auth-divider">Or continue with</div>
+            <button type="button" class="social-btn"><i class="fa-brands fa-google"></i> Google</button>
+            
+            <div class="auth-footer">
+                New here? <a href="#" onclick="event.preventDefault();">Create an account</a>
+            </div>
         </div>
+
+        <div id="authStep2" style="display: none;">
+            <div class="auth-header">
+                <h2>Verify your email</h2>
+                <p id="verifyEmailText" style="margin-top: 8px;">Enter the 4-digit code sent to your email.</p>
+            </div>
+            
+            <form onsubmit="window.handleAuthStep2(event);">
+                <div class="verification-code-container">
+                    <input type="text" class="verify-input" maxlength="1" required autocomplete="off">
+                    <input type="text" class="verify-input" maxlength="1" required autocomplete="off">
+                    <input type="text" class="verify-input" maxlength="1" required autocomplete="off">
+                    <input type="text" class="verify-input" maxlength="1" required autocomplete="off">
+                </div>
+                <button type="submit" class="auth-btn" style="margin-top: 32px;">Verify & Log In</button>
+            </form>
+            
+            <div class="auth-footer" style="margin-top: 32px; font-size: 0.85rem;">
+                Didn't receive the code? <a href="#" onclick="event.preventDefault(); alert('A new code has been sent.');">Resend</a><br><br>
+                <a href="#" onclick="window.backToStep1(event);" style="color: #888; text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> Back to sign in</a>
+            </div>
+        </div>
+
     </div>
 
     <nav class="bottom-nav">
@@ -794,6 +812,7 @@
     </nav>
 
     <script>
+        // --- Navigation & Search Logic ---
         window.filterArtisana = function() {
             var input = document.getElementById('discoverSearch');
             if (!input) return;
@@ -867,6 +886,7 @@
             }
         };
 
+        // --- AR & Media Logic ---
         window.changeImage = function(element, newSrc) {
             var mainImg = document.getElementById('mainImage');
             mainImg.style.opacity = '0.5';
@@ -901,15 +921,9 @@
             }, 500);
         };
 
-        // Cart State
+        // --- Cart State Logic ---
         window.cart = [];
-        window.productData = {
-            id: 1,
-            title: "Nomad Ceramic Pot",
-            price: 120.00,
-            image: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=200&q=80",
-            variant: "Kyoto Clay / 8 Inch"
-        };
+        window.productData = { id: 1, title: "Nomad Ceramic Pot", price: 120.00, image: "https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=200&q=80", variant: "Kyoto Clay / 8 Inch" };
 
         window.toggleCart = function() {
             document.getElementById('cartOverlay').classList.toggle('open');
@@ -922,26 +936,18 @@
             for(var i=0; i<window.cart.length; i++) {
                 if(window.cart[i].id === window.productData.id) existingItem = window.cart[i];
             }
-
-            if (existingItem) {
-                existingItem.qty++;
-            } else {
-                window.cart.push({ id: window.productData.id, title: window.productData.title, price: window.productData.price, image: window.productData.image, variant: window.productData.variant, qty: 1 });
-            }
-            window.updateCartUI();
+            if (existingItem) existingItem.qty++;
+            else window.cart.push({ id: window.productData.id, title: window.productData.title, price: window.productData.price, image: window.productData.image, variant: window.productData.variant, qty: 1 });
             
-            if (!document.getElementById('cartDrawer').classList.contains('open')) {
-                window.toggleCart();
-            }
+            window.updateCartUI();
+            if (!document.getElementById('cartDrawer').classList.contains('open')) window.toggleCart();
         };
 
         window.updateQty = function(id, change) {
             for(var i=0; i<window.cart.length; i++) {
                 if(window.cart[i].id === id) {
                     window.cart[i].qty += change;
-                    if(window.cart[i].qty <= 0) {
-                        window.cart.splice(i, 1);
-                    }
+                    if(window.cart[i].qty <= 0) window.cart.splice(i, 1);
                     break;
                 }
             }
@@ -955,17 +961,14 @@
             var subtotalEl = document.getElementById('cartSubtotal');
             var totalEl = document.getElementById('cartTotal');
 
-            var totalQty = 0;
-            var subtotal = 0;
-
+            var totalQty = 0; var subtotal = 0;
             for(var i=0; i<window.cart.length; i++) {
                 totalQty += window.cart[i].qty;
                 subtotal += (window.cart[i].price * window.cart[i].qty);
             }
 
             countBadge.innerText = totalQty;
-            if (totalQty > 0) countBadge.classList.add('active');
-            else countBadge.classList.remove('active');
+            if (totalQty > 0) countBadge.classList.add('active'); else countBadge.classList.remove('active');
 
             if (window.cart.length === 0) {
                 container.innerHTML = '';
@@ -977,43 +980,21 @@
             }
 
             emptyMsg.style.display = 'none';
-            
             var html = '';
             for(var j=0; j<window.cart.length; j++) {
                 var item = window.cart[j];
-                html += '<div class="cart-item">' +
-                    '<img src="' + item.image + '" class="cart-item-img" alt="' + item.title + '">' +
-                    '<div class="cart-item-info">' +
-                        '<div class="cart-item-title">' + item.title + '</div>' +
-                        '<div class="cart-item-variant">' + item.variant + '</div>' +
-                        '<div class="cart-item-controls">' +
-                            '<div class="qty-control">' +
-                                '<button type="button" class="qty-btn" onclick="window.updateQty(' + item.id + ', -1)">−</button>' +
-                                '<span>' + item.qty + '</span>' +
-                                '<button type="button" class="qty-btn" onclick="window.updateQty(' + item.id + ', 1)">+</button>' +
-                            '</div>' +
-                            '<div style="font-weight: 600; color: var(--deep-teal);">' +
-                                '$' + (item.price * item.qty).toFixed(2) +
-                            '</div>' +
-                        '</div>' +
-                    '</div>' +
-                '</div>';
+                html += '<div class="cart-item"><img src="' + item.image + '" class="cart-item-img" alt="' + item.title + '"><div class="cart-item-info"><div class="cart-item-title">' + item.title + '</div><div class="cart-item-variant">' + item.variant + '</div><div class="cart-item-controls"><div class="qty-control"><button type="button" class="qty-btn" onclick="window.updateQty(' + item.id + ', -1)">−</button><span>' + item.qty + '</span><button type="button" class="qty-btn" onclick="window.updateQty(' + item.id + ', 1)">+</button></div><div style="font-weight: 600; color: var(--deep-teal);">$' + (item.price * item.qty).toFixed(2) + '</div></div></div></div>';
             }
             container.innerHTML = html;
-
             subtotalEl.innerText = '$' + subtotal.toFixed(2);
             totalEl.innerText = '$' + subtotal.toFixed(2);
         };
 
-        // Auth & State Logic
+        // --- Multi-Step Auth Logic ---
         window.isUserLoggedIn = false; 
 
         window.toggleAuth = function(e) {
-            // Stop events from accidentally bubbling and closing the modal
-            if (e) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
+            if (e) { e.preventDefault(); e.stopPropagation(); }
             
             var authOverlay = document.getElementById('authOverlay');
             var authModal = document.getElementById('authModal');
@@ -1021,20 +1002,76 @@
             if (authOverlay && authModal) {
                 authOverlay.classList.toggle('open');
                 authModal.classList.toggle('open');
+                
+                // Always reset to step 1 when opening/closing
+                setTimeout(function() {
+                    if(!authModal.classList.contains('open')) {
+                        document.getElementById('authStep1').style.display = 'block';
+                        document.getElementById('authStep2').style.display = 'none';
+                        document.querySelectorAll('.verify-input').forEach(i => i.value = '');
+                    }
+                }, 400);
             }
         };
 
-        window.processLogin = function(e) {
-            if(e) e.preventDefault(); // Stop page reload on form submit
+        window.handleAuthStep1 = function(e) {
+            if(e) e.preventDefault();
+            
+            // Get the email and display it on step 2
+            var email = document.getElementById('authEmailInput').value;
+            document.getElementById('verifyEmailText').innerHTML = 'Enter the 4-digit code sent to <b>' + email + '</b>';
+            
+            // Switch UI
+            document.getElementById('authStep1').style.display = 'none';
+            document.getElementById('authStep2').style.display = 'block';
+            
+            // Auto-focus the first input box after transition
+            setTimeout(function() {
+                document.querySelector('.verify-input').focus();
+            }, 50);
+        };
+
+        window.handleAuthStep2 = function(e) {
+            if(e) e.preventDefault(); 
+            
             window.isUserLoggedIn = true;
             
-            // Close the modal
+            // Close the modal completely
             var authOverlay = document.getElementById('authOverlay');
             var authModal = document.getElementById('authModal');
             authOverlay.classList.remove('open');
             authModal.classList.remove('open');
             
             window.updateProfileUI();
+        };
+
+        window.backToStep1 = function(e) {
+            if(e) e.preventDefault();
+            document.getElementById('authStep2').style.display = 'none';
+            document.getElementById('authStep1').style.display = 'block';
+            document.querySelectorAll('.verify-input').forEach(i => i.value = ''); // Clear codes
+        };
+
+        // Set up the auto-advancing verification inputs
+        window.setupVerificationInputs = function() {
+            var inputs = document.querySelectorAll('.verify-input');
+            inputs.forEach(function(input, index) {
+                // Auto move to next input
+                input.addEventListener('input', function() {
+                    if (this.value.length >= 1) {
+                        this.value = this.value.slice(0,1); // Enforce only 1 character
+                        if (index < inputs.length - 1) {
+                            inputs[index + 1].focus();
+                        }
+                    }
+                });
+                // Handle backspace to move to previous input
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+            });
         };
 
         window.processLogout = function() {
@@ -1058,7 +1095,7 @@
             }
         };
 
-        // Close overlays when clicking outside
+        // Click outside handlers
         document.addEventListener('click', function(event) {
             var cartDrawer = document.getElementById('cartDrawer');
             var cartOverlay = document.getElementById('cartOverlay');
@@ -1069,7 +1106,6 @@
                 if (!cartDrawer.contains(event.target) && 
                     (!headerCartIcon || !headerCartIcon.contains(event.target)) && 
                     (!bottomNavCartIcon || !bottomNavCartIcon.contains(event.target))) {
-                    
                     cartDrawer.classList.remove('open');
                     cartOverlay.classList.remove('open');
                 }
@@ -1079,6 +1115,7 @@
         // Initialize UI on load
         window.updateCartUI();
         window.updateProfileUI();
+        window.setupVerificationInputs();
 
     </script>
 </body>
