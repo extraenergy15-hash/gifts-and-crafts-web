@@ -101,37 +101,40 @@
         .hero-text h1 { font-size: 3.5rem; line-height: 1.1; color: var(--deep-teal); margin-top: -8px; }
         .hero-image img { max-height: 350px; object-fit: contain; border-radius: var(--radius-md); filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1)); }
         
-        /* === Search Bar UI === */
+        /* === Search Bar UI (FIXED) === */
         .search-bar-container { 
-            max-width: 800px; 
-            margin: -40px auto 40px; 
-            padding: 0 24px; 
-            position: relative; 
-            z-index: 9999; /* Massively increased to prevent invisible overlaps */
+            max-width: 800px; margin: -40px auto 40px; padding: 0 24px; position: relative; z-index: 9999; 
         }
+        
         .search-input-wrapper { 
-            background: var(--white); 
-            border-radius: 50px; 
-            padding: 0 24px; 
-            display: flex; 
-            align-items: center; 
-            gap: 16px; 
-            box-shadow: 0 15px 35px rgba(0,77,86,0.1); 
-            border: 1px solid var(--border-light); 
-            transition: var(--transition); 
+            background: var(--white); border-radius: 50px; 
+            display: flex; align-items: center; position: relative;
+            box-shadow: 0 15px 35px rgba(0,77,86,0.1); border: 1px solid var(--border-light); 
+            transition: var(--transition);
+            cursor: text; /* Makes the entire white box show the text cursor */
+            overflow: hidden;
         }
         .search-input-wrapper:focus-within { 
-            box-shadow: 0 20px 40px rgba(0,77,86,0.15); 
-            transform: translateY(-2px); 
-            border-color: var(--deep-teal); 
+            box-shadow: 0 20px 40px rgba(0,77,86,0.15); transform: translateY(-2px); border-color: var(--deep-teal); 
         }
+        
+        /* Icon passes clicks entirely to the label/input underneath */
         .search-input-wrapper i { 
-            color: var(--earthy-clay); font-size: 1.2rem; 
+            position: absolute; left: 24px; color: var(--earthy-clay); font-size: 1.2rem; 
+            pointer-events: none; 
+            z-index: 2;
         }
+        
+        /* Input stretches completely to the edges */
         .search-input-wrapper input { 
             flex: 1; border: none; outline: none; font-size: 1.1rem; 
             font-family: var(--font-body); color: var(--deep-teal); background: transparent; 
-            padding: 18px 0; width: 100%;
+            width: 100%; height: 100%;
+            min-height: 60px; /* Provides the vertical height instead of padding */
+            padding: 0 24px 0 56px; /* Left padding makes room for the icon */
+            border-radius: 50px; 
+            cursor: text;
+            z-index: 1;
         }
         .search-input-wrapper input::placeholder { color: #aaa; }
 
@@ -422,10 +425,10 @@
                 </section>
 
                 <div class="search-bar-container">
-                    <div class="search-input-wrapper">
+                    <label class="search-input-wrapper" for="discoverSearch">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="discoverSearch" placeholder="Search ceramics, linens, or lighting..." autocomplete="off" onkeyup="searchProducts()" oninput="searchProducts()">
-                    </div>
+                        <input type="text" id="discoverSearch" placeholder="Search ceramics, linens, or lighting..." autocomplete="off" oninput="window.filterArtisana()">
+                    </label>
                 </div>
 
                 <section class="cards-grid">
@@ -756,75 +759,57 @@
 
     <script>
         // ==========================================
-        // 100% BULLETPROOF SEARCH FUNCTION
+        // 100% BULLETPROOF SEARCH LOGIC
         // ==========================================
-        function searchProducts() {
+        window.filterArtisana = function() {
             var input = document.getElementById('discoverSearch');
-            if (!input) return; // Failsafe if input doesn't exist
+            if (!input) return;
 
-            var filter = input.value.toLowerCase().trim();
-            var storeCards = document.getElementsByClassName('store-card');
-            var noResultsMsg = document.getElementById('noResultsMsg');
+            var query = input.value.toLowerCase().trim();
+            var storeCards = document.querySelectorAll('.store-card');
+            var noRes = document.getElementById('noResultsMsg');
             var totalMatches = 0;
 
-            // Loop through all category cards
-            for (var i = 0; i < storeCards.length; i++) {
-                var card = storeCards[i];
-                var products = card.getElementsByClassName('product-block');
+            storeCards.forEach(function(card) {
                 var cardHasMatch = false;
-
-                // Loop through products inside this card
-                for (var j = 0; j < products.length; j++) {
-                    var product = products[j];
-                    var titleEl = product.querySelector('.product-details p');
-                    
-                    if (titleEl) {
-                        var titleText = titleEl.innerText || titleEl.textContent;
-                        
-                        // Check if typed text matches product title
-                        if (titleText.toLowerCase().indexOf(filter) > -1) {
-                            product.style.display = "flex";
-                            cardHasMatch = true;
-                            totalMatches++;
-                        } else {
-                            product.style.display = "none";
-                        }
+                var prods = card.querySelectorAll('.product-block');
+                
+                prods.forEach(function(p) {
+                    var title = p.querySelector('.product-details p');
+                    if (title && title.innerText.toLowerCase().indexOf(query) > -1) {
+                        p.style.display = 'flex';
+                        cardHasMatch = true;
+                        totalMatches++;
+                    } else {
+                        p.style.display = 'none';
                     }
-                }
+                });
+                
+                card.style.display = cardHasMatch ? 'flex' : 'none';
+            });
 
-                // Show/hide category card based on if it has matching products
-                if (cardHasMatch) {
-                    card.style.display = "flex";
-                } else {
-                    card.style.display = "none";
-                }
+            if(noRes) {
+                noRes.style.display = (totalMatches === 0 && query !== '') ? 'block' : 'none';
             }
-
-            // Show or hide the "No Results" text
-            if (noResultsMsg) {
-                if (totalMatches === 0 && filter !== "") {
-                    noResultsMsg.style.display = "block";
-                } else {
-                    noResultsMsg.style.display = "none";
-                }
-            }
-        }
+        };
 
         // ==========================================
         // UI & NAVIGATION FUNCTIONS
         // ==========================================
         function navigateTo(sectionId) {
-            document.querySelectorAll('.section').forEach(function(el) {
-                el.classList.remove('active');
-            });
+            var sections = document.querySelectorAll('.section');
+            for(var i=0; i<sections.length; i++) {
+                sections[i].classList.remove('active');
+            }
             document.getElementById(sectionId + '-section').classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function updateNav(element) {
-            document.querySelectorAll('.nav-item').forEach(function(el) {
-                el.classList.remove('active');
-            });
+            var navItems = document.querySelectorAll('.nav-item');
+            for(var i=0; i<navItems.length; i++) {
+                navItems[i].classList.remove('active');
+            }
             if(element && !element.classList.contains('cart-nav-btn')){
                 element.classList.add('active');
             }
@@ -845,9 +830,10 @@
             if(event && event.target.closest('.ar-trigger-btn')) return;
             navigateTo(sectionId);
             if(sectionId === 'product') {
-                document.querySelectorAll('.nav-item').forEach(function(el) {
-                    el.classList.remove('active');
-                });
+                var navItems = document.querySelectorAll('.nav-item');
+                for(var i=0; i<navItems.length; i++) {
+                    navItems[i].classList.remove('active');
+                }
             }
         }
 
@@ -858,9 +844,10 @@
                 mainImg.src = newSrc;
                 mainImg.style.opacity = '1';
             }, 150);
-            document.querySelectorAll('.thumb').forEach(function(th) {
-                th.classList.remove('active');
-            });
+            var thumbs = document.querySelectorAll('.thumb');
+            for(var i=0; i<thumbs.length; i++) {
+                thumbs[i].classList.remove('active');
+            }
             element.classList.add('active');
         }
 
@@ -903,7 +890,11 @@
         }
 
         function addToCart() {
-            var existingItem = cart.find(function(item) { return item.id === productData.id; });
+            var existingItem = null;
+            for(var i=0; i<cart.length; i++) {
+                if(cart[i].id === productData.id) existingItem = cart[i];
+            }
+
             if (existingItem) {
                 existingItem.qty++;
             } else {
@@ -917,11 +908,13 @@
         }
 
         function updateQty(id, change) {
-            var item = cart.find(function(x) { return x.id === id; });
-            if (item) {
-                item.qty += change;
-                if (item.qty <= 0) {
-                    cart = cart.filter(function(x) { return x.id !== id; });
+            for(var i=0; i<cart.length; i++) {
+                if(cart[i].id === id) {
+                    cart[i].qty += change;
+                    if(cart[i].qty <= 0) {
+                        cart.splice(i, 1);
+                    }
+                    break;
                 }
             }
             updateCartUI();
@@ -934,9 +927,15 @@
             var subtotalEl = document.getElementById('cartSubtotal');
             var totalEl = document.getElementById('cartTotal');
 
-            var totalQty = cart.reduce(function(acc, item) { return acc + item.qty; }, 0);
+            var totalQty = 0;
+            var subtotal = 0;
+
+            for(var i=0; i<cart.length; i++) {
+                totalQty += cart[i].qty;
+                subtotal += (cart[i].price * cart[i].qty);
+            }
+
             countBadge.innerText = totalQty;
-            
             if (totalQty > 0) countBadge.classList.add('active');
             else countBadge.classList.remove('active');
 
@@ -950,8 +949,11 @@
             }
 
             emptyMsg.style.display = 'none';
-            container.innerHTML = cart.map(function(item) {
-                return '<div class="cart-item">' +
+            
+            var html = '';
+            for(var j=0; j<cart.length; j++) {
+                var item = cart[j];
+                html += '<div class="cart-item">' +
                     '<img src="' + item.image + '" class="cart-item-img" alt="' + item.title + '">' +
                     '<div class="cart-item-info">' +
                         '<div class="cart-item-title">' + item.title + '</div>' +
@@ -968,9 +970,9 @@
                         '</div>' +
                     '</div>' +
                 '</div>';
-            }).join('');
+            }
+            container.innerHTML = html;
 
-            var subtotal = cart.reduce(function(acc, item) { return acc + (item.price * item.qty); }, 0);
             subtotalEl.innerText = '$' + subtotal.toFixed(2);
             totalEl.innerText = '$' + subtotal.toFixed(2);
         }
