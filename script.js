@@ -90,6 +90,12 @@ window.toggleMobileMenu = () => {
     nav.classList.toggle('open');
 };
 
+// Add this to automatically close the mobile menu when a link is clicked
+document.querySelectorAll('.mobile-nav a').forEach(link => {
+    link.addEventListener('click', () => {
+        document.getElementById('mobileNav').classList.remove('open');
+    });
+});
 // Intersection Observer for Fade-In Effects
 const observeElements = () => {
     const observer = new IntersectionObserver((entries) => {
