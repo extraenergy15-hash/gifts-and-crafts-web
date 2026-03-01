@@ -267,21 +267,34 @@
             <h3>Your Cart</h3>
             <button class="close-btn" onclick="window.toggleCart()" aria-label="Close Cart"><i class="fa-solid fa-xmark"></i></button>
         </div>
+        
         <div class="cart-items-container" id="cartItems"></div>
+        
         <div class="cart-footer">
-            <div class="promo-box">
-                <input type="text" id="promoInput" class="form-input" placeholder="Promo Code (SNEHA10)">
-                <button class="btn btn-secondary" onclick="window.applyPromoCode()">Apply</button>
+            <div class="promo-wrapper">
+                <input type="text" id="promoInput" placeholder="Promo Code (SNEHA10)">
+                <button type="button" onclick="window.applyPromoCode()">Apply</button>
             </div>
             <div id="promoFeedback" class="promo-feedback"></div>
             
-            <div class="totals-row"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
-            <div class="totals-row text-success"><span>Eco-Discount (5%)</span><span id="cartDiscount">-$0.00</span></div>
-            <div class="totals-row text-brand" id="promoRow" style="display: none;"><span>Promo Code (10%)</span><span id="promoAmount">-$0.00</span></div>
+            <div class="totals-row">
+                <span>Subtotal</span>
+                <span id="cartSubtotal">$0.00</span>
+            </div>
+            <div class="totals-row text-success">
+                <span>Eco-Discount (5%)</span>
+                <span id="cartDiscount">-$0.00</span>
+            </div>
+            <div class="totals-row text-brand" id="promoRow" style="display: none;">
+                <span>Promo Code (10%)</span>
+                <span id="promoAmount">-$0.00</span>
+            </div>
             
             <div class="totals-row final-total">
-                <span>Total</span><span id="cartTotal">$0.00</span>
+                <span>Total</span>
+                <span id="cartTotal">$0.00</span>
             </div>
+            
             <button class="btn btn-primary btn-block mt-md" onclick="window.openCheckout()">Proceed to Checkout</button>
         </div>
     </div>
@@ -301,15 +314,19 @@
         <h1>Order Confirmed!</h1>
         <p>Thank you for supporting artisan crafts. We've sent a confirmation email.</p>
         <div class="modal-actions">
-            <button class="btn btn-primary" onclick="location.reload()">Continue Shopping</button>
-            <button class="btn btn-outline" onclick="window.viewReceipt()"><i class="fa-solid fa-receipt"></i> View Receipt</button>
+            <button type="button" id="btnContinueShopping" class="btn btn-primary" onclick="window.continueShopping()">
+                <i class="fa-solid fa-bag-shopping" style="margin-right: 8px;"></i> Continue Shopping
+            </button>
+            <button type="button" id="btnViewReceipt" class="btn btn-outline" onclick="window.viewReceipt()">
+                <i class="fa-solid fa-receipt" style="margin-right: 8px;"></i> View Receipt
+            </button>
         </div>
     </div>
 
     <div id="receiptModalOverlay" class="modal-overlay">
         <div id="receiptModalContent" class="receipt-box">
             <div class="receipt-header">
-                <button class="close-receipt-btn" onclick="window.closeReceipt()"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" id="btnCloseReceipt" class="close-receipt-btn" onclick="window.closeReceipt()"><i class="fa-solid fa-xmark"></i></button>
                 <h2>Snehacrafts.</h2>
                 <p>Digital Receipt</p>
             </div>
