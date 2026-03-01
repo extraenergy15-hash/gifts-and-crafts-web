@@ -395,6 +395,7 @@ window.updateCartUI = () => {
     const promoRow = document.getElementById('promoRow');
     const promoAmountEl = document.getElementById('promoAmount');
     
+    // Upsell & Shipping Elements
     const statusText = document.getElementById('shippingStatusText');
     const progressBar = document.getElementById('shippingProgressBar');
     const upsellContainer = document.getElementById('cartUpsell');
@@ -412,6 +413,7 @@ window.updateCartUI = () => {
         countBadge.classList.toggle('active', totalQty > 0);
     }
 
+    // Process Shipping Tracker & Upsells
     if (statusText && progressBar) {
         const remaining = threshold - subtotal;
         progressBar.style.width = `${Math.min((subtotal / threshold) * 100, 100)}%`;
@@ -449,6 +451,7 @@ window.updateCartUI = () => {
     }
 
     if (items.length === 0) {
+        // === FIXED: Button now redirects to shop seamlessly ===
         container.innerHTML = `
             <div class="empty-cart-view">
                 <i class="fa-solid fa-basket-shopping"></i>
@@ -651,7 +654,7 @@ window.closeReceipt = () => {
     }
 };
 
-// === 11. Initialization ===
+// === 11. Initialization & Trending Scroll ===
 document.addEventListener('DOMContentLoaded', () => {
     const searchBar = document.getElementById('discoverSearch');
     if(searchBar) searchBar.addEventListener('input', window.applyFilters);
@@ -661,4 +664,36 @@ document.addEventListener('DOMContentLoaded', () => {
     window.updateCartUI();
     window.updateProfileWishlistUI();
     observeElements();
+
+    // --- NEW LOGIC: TRENDING AUTO-SCROLL CAROUSEL ---
+    const trendingCarousel = document.getElementById('trendingCarousel');
+    let trendingAutoScrollTimer;
+
+    window.scrollTrending = (direction) => {
+        if(trendingCarousel) {
+            const scrollAmount = trendingCarousel.clientWidth;
+            trendingCarousel.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+    };
+
+    const startTrendingAutoScroll = () => {
+        trendingAutoScrollTimer = setInterval(() => {
+            if(!trendingCarousel) return;
+            
+            const maxScroll = trendingCarousel.scrollWidth - trendingCarousel.clientWidth;
+            if (trendingCarousel.scrollLeft >= maxScroll - 10) {
+                trendingCarousel.scrollTo({ left: 0, behavior: 'smooth' });
+            } else {
+                trendingCarousel.scrollBy({ left: trendingCarousel.clientWidth, behavior: 'smooth' });
+            }
+        }, 5000); 
+    };
+
+    if (trendingCarousel) {
+        startTrendingAutoScroll();
+        trendingCarousel.addEventListener('mouseenter', () => clearInterval(trendingAutoScrollTimer));
+        trendingCarousel.addEventListener('mouseleave', startTrendingAutoScroll);
+        trendingCarousel.addEventListener('touchstart', () => clearInterval(trendingAutoScrollTimer));
+        trendingCarousel.addEventListener('touchend', startTrendingAutoScroll);
+    }
 });
