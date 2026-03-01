@@ -395,7 +395,6 @@ window.updateCartUI = () => {
     const promoRow = document.getElementById('promoRow');
     const promoAmountEl = document.getElementById('promoAmount');
     
-    // Upsell & Shipping Elements
     const statusText = document.getElementById('shippingStatusText');
     const progressBar = document.getElementById('shippingProgressBar');
     const upsellContainer = document.getElementById('cartUpsell');
@@ -413,7 +412,6 @@ window.updateCartUI = () => {
         countBadge.classList.toggle('active', totalQty > 0);
     }
 
-    // Process Shipping Tracker & Upsells
     if (statusText && progressBar) {
         const remaining = threshold - subtotal;
         progressBar.style.width = `${Math.min((subtotal / threshold) * 100, 100)}%`;
@@ -451,7 +449,6 @@ window.updateCartUI = () => {
     }
 
     if (items.length === 0) {
-        // === FIXED: Button now redirects natively to #shop and closes the cart ===
         container.innerHTML = `
             <div class="empty-cart-view">
                 <i class="fa-solid fa-basket-shopping"></i>
@@ -580,7 +577,7 @@ window.processSimulatedOrder = (event) => {
         }
         
         btn.disabled = false;
-        btn.innerHTML = 'Confirm & Pay';
+        btn.innerHTML = 'Confirm Order & Pay';
         if (event.target && typeof event.target.reset === 'function') {
             event.target.reset(); 
         }
