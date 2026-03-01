@@ -59,6 +59,115 @@
                 </div>
             </section>
 
+            <section id="trending" class="content-wide py-lg fade-in">
+                <div class="trending-header">
+                    <div>
+                        <h2>Trending Best Sellers</h2>
+                        <p>Our most loved handmade creations this week</p>
+                    </div>
+                    <div class="trending-nav-btns">
+                        <button class="trend-nav-btn" onclick="window.scrollTrending(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="trend-nav-btn" onclick="window.scrollTrending(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                
+                <div class="trending-carousel" id="trendingCarousel">
+                    <div class="trending-track" id="trendingTrack">
+                        
+                        <div class="trending-card">
+                            <span class="trending-badge bg-orange">#1 Best Seller</span>
+                            <div class="trending-img-wrap" onclick="window.viewProductDetails(1)">
+                                <img src="https://images.unsplash.com/photo-1617361270806-c4ae3c316a3c?auto=format&fit=crop&w=600&q=80" alt="Terracotta Artisan Vase">
+                            </div>
+                            <div class="trending-info">
+                                <h3 class="trending-title" onclick="window.viewProductDetails(1)">Terracotta Artisan Vase</h3>
+                                <div class="trending-rating">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                                    <span>1,248</span>
+                                </div>
+                                <div class="trending-price">
+                                    <span class="t-price-current">$85.00</span>
+                                    <span class="t-price-original">$110.00</span>
+                                </div>
+                                <button class="btn btn-primary btn-block trending-btn" onclick="window.addToCart(1)">Add to Cart</button>
+                            </div>
+                        </div>
+
+                        <div class="trending-card">
+                            <span class="trending-badge bg-red">Trending</span>
+                            <div class="trending-img-wrap" onclick="window.viewProductDetails(2)">
+                                <img src="https://images.unsplash.com/photo-1522771730849-478c24f46487?auto=format&fit=crop&w=600&q=80" alt="Organic Macrame Wall Hanging">
+                            </div>
+                            <div class="trending-info">
+                                <h3 class="trending-title" onclick="window.viewProductDetails(2)">Organic Macrame Wall Hanging</h3>
+                                <div class="trending-rating">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    <span>892</span>
+                                </div>
+                                <div class="trending-price">
+                                    <span class="t-price-current">$120.00</span>
+                                </div>
+                                <button class="btn btn-primary btn-block trending-btn" onclick="window.addToCart(2)">Add to Cart</button>
+                            </div>
+                        </div>
+
+                        <div class="trending-card">
+                            <span class="trending-badge bg-orange">Best Seller</span>
+                            <div class="trending-img-wrap" onclick="window.viewProductDetails(3)">
+                                <img src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&w=600&q=80" alt="Carved Teakwood Bowl">
+                            </div>
+                            <div class="trending-info">
+                                <h3 class="trending-title" onclick="window.viewProductDetails(3)">Carved Teakwood Bowl</h3>
+                                <div class="trending-rating">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
+                                    <span>451</span>
+                                </div>
+                                <div class="trending-price">
+                                    <span class="t-price-current">$65.00</span>
+                                </div>
+                                <button class="btn btn-primary btn-block trending-btn" onclick="window.addToCart(3)">Add to Cart</button>
+                            </div>
+                        </div>
+
+                        <div class="trending-card">
+                            <span class="trending-badge bg-red">Hot Deal</span>
+                            <div class="trending-img-wrap" onclick="window.viewProductDetails(4)">
+                                <img src="https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?auto=format&fit=crop&w=600&q=80" alt="Woven Rattan Basket">
+                            </div>
+                            <div class="trending-info">
+                                <h3 class="trending-title" onclick="window.viewProductDetails(4)">Woven Rattan Basket</h3>
+                                <div class="trending-rating">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                                    <span>612</span>
+                                </div>
+                                <div class="trending-price">
+                                    <span class="t-price-current">$55.00</span>
+                                </div>
+                                <button class="btn btn-primary btn-block trending-btn" onclick="window.addToCart(4)">Add to Cart</button>
+                            </div>
+                        </div>
+                        
+                        <div class="trending-card">
+                            <span class="trending-badge bg-orange">Top Choice</span>
+                            <div class="trending-img-wrap" onclick="window.viewProductDetails(1)">
+                                <img src="https://images.unsplash.com/photo-1617361270806-c4ae3c316a3c?auto=format&fit=crop&w=600&q=80" alt="Terracotta Artisan Vase (Variant)">
+                            </div>
+                            <div class="trending-info">
+                                <h3 class="trending-title" onclick="window.viewProductDetails(1)">Rustic Artisan Vase</h3>
+                                <div class="trending-rating">
+                                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                    <span>2,045</span>
+                                </div>
+                                <div class="trending-price">
+                                    <span class="t-price-current">$85.00</span>
+                                </div>
+                                <button class="btn btn-primary btn-block trending-btn" onclick="window.addToCart(1)">Add to Cart</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
             <section id="shop" class="content-wide py-lg fade-in">
                 <div class="section-header">
                     <h2>Featured Collection</h2>
@@ -382,10 +491,10 @@
         <h1>Order Confirmed!</h1>
         <p>Thank you for supporting artisan crafts. We've sent a confirmation email.</p>
         <div class="modal-actions">
-            <button type="button" id="btnContinueShopping" class="btn btn-primary" onclick="window.continueShopping()">
+            <button type="button" id="btnContinueShopping" class="btn btn-primary">
                 <i class="fa-solid fa-bag-shopping" style="margin-right: 8px;"></i> Continue Shopping
             </button>
-            <button type="button" id="btnViewReceipt" class="btn btn-outline" onclick="window.viewReceipt()">
+            <button type="button" id="btnViewReceipt" class="btn btn-outline">
                 <i class="fa-solid fa-receipt" style="margin-right: 8px;"></i> View Receipt
             </button>
         </div>
@@ -394,7 +503,7 @@
     <div id="receiptModalOverlay" class="modal-overlay">
         <div id="receiptModalContent" class="receipt-box">
             <div class="receipt-header">
-                <button type="button" id="btnCloseReceipt" class="close-receipt-btn" onclick="window.closeReceipt()"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" id="btnCloseReceipt" class="close-receipt-btn"><i class="fa-solid fa-xmark"></i></button>
                 <h2>Snehacrafts.</h2>
                 <p>Digital Receipt</p>
             </div>
