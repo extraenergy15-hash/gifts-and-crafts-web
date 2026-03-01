@@ -395,6 +395,13 @@ window.updateCartUI = () => {
     const promoRow = document.getElementById('promoRow');
     const promoAmountEl = document.getElementById('promoAmount');
     
+    // Upsell & Shipping Elements
+    const statusText = document.getElementById('shippingStatusText');
+    const progressBar = document.getElementById('shippingProgressBar');
+    const upsellContainer = document.getElementById('cartUpsell');
+    const upsellList = document.getElementById('upsellList');
+    const threshold = 150;
+    
     if (!container) return;
 
     const items = window.cartState.items || [];
@@ -406,12 +413,50 @@ window.updateCartUI = () => {
         countBadge.classList.toggle('active', totalQty > 0);
     }
 
+    // Process Shipping Tracker & Upsells
+    if (statusText && progressBar) {
+        const remaining = threshold - subtotal;
+        progressBar.style.width = `${Math.min((subtotal / threshold) * 100, 100)}%`;
+        
+        if (subtotal <= 0) {
+            statusText.innerText = `Free Shipping at $${threshold.toFixed(2)}`;
+            progressBar.style.background = 'var(--border)';
+        } else if (remaining > 0) {
+            statusText.innerHTML = `Add <span style="color:var(--primary)">$${remaining.toFixed(2)}</span> for Free Shipping`;
+            progressBar.style.background = 'var(--primary)';
+        } else {
+            statusText.innerHTML = `<span style="color:var(--success)"><i class="fa-solid fa-circle-check"></i> Free Shipping Unlocked!</span>`;
+            progressBar.style.background = 'var(--success)';
+        }
+
+        if (remaining > 0 && remaining <= 50 && upsellContainer && upsellList) {
+            upsellContainer.style.display = 'block';
+            const currentIds = items.map(i => i.id);
+            const suggestions = productsConfig.filter(p => !currentIds.includes(p.id)).slice(0, 2);
+            
+            if (suggestions.length > 0) {
+                upsellList.innerHTML = suggestions.map(p => `
+                    <div style="min-width: 170px; background: var(--surface); border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow-sm); border: 1px solid var(--border);">
+                        <img src="${p.img}" alt="${p.title}" style="width: 45px; height: 45px; border-radius: 8px; object-fit: cover;">
+                        <div style="flex: 1; overflow: hidden;">
+                            <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.title}</div>
+                            <div style="font-size: 0.7rem; color: var(--primary); font-weight: 700;">$${p.price.toFixed(2)}</div>
+                            <button type="button" onclick="window.addToCart(${p.id})" style="color: var(--text-dark); font-size: 0.65rem; font-weight: 700; margin-top: 2px; background:none; border:none; cursor:pointer;">+ Add</button>
+                        </div>
+                    </div>`).join('');
+            } else upsellContainer.style.display = 'none';
+        } else if (upsellContainer) {
+            upsellContainer.style.display = 'none';
+        }
+    }
+
     if (items.length === 0) {
+        // === FIXED: Button now redirects natively to #shop and closes the cart ===
         container.innerHTML = `
             <div class="empty-cart-view">
                 <i class="fa-solid fa-basket-shopping"></i>
                 <p>Your sanctuary is currently empty.</p>
-                <button class="btn btn-outline" onclick="window.toggleCart()">Continue Shopping</button>
+                <a href="#shop" class="btn btn-outline" onclick="window.toggleCart(false); window.navigateTo('home');">Continue Shopping</a>
             </div>`;
         
         if (subtotalEl) {
@@ -526,6 +571,8 @@ window.processSimulatedOrder = (event) => {
 
         window.cartState.items = [];
         window.cartState.promoApplied = false;
+
+        window.navigateTo('home');
         
         const confirmModal = document.getElementById('orderConfirmation');
         if (confirmModal) {
@@ -541,14 +588,11 @@ window.processSimulatedOrder = (event) => {
     }, 2000);
 };
 
-
-// === 10. MODAL GLOBAL LOGIC (Fix for the overlapping receipt and routing issue) ===
+// === 10. MODAL GLOBAL LOGIC ===
 window.continueShopping = () => {
-    // 1. Hide the green confirmation modal
     const confirmModal = document.getElementById('orderConfirmation');
     if (confirmModal) confirmModal.style.display = 'none';
     
-    // 2. Safely route back to the home page instead of staying on checkout
     window.navigateTo('home');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
@@ -560,14 +604,11 @@ window.viewReceipt = () => {
         return; 
     }
 
-    // 1. HIDE THE GREEN CONFIRMATION MODAL (Prevents z-index overlap)
     const confirmModal = document.getElementById('orderConfirmation');
     if (confirmModal) confirmModal.style.display = 'none';
 
-    // 2. NAVIGATE AWAY FROM CHECKOUT (So you don't see it behind the receipt)
     window.navigateTo('home');
 
-    // 3. Inject Data Securely
     const setElText = (id, text) => {
         const el = document.getElementById(id);
         if (el) el.innerText = text;
@@ -587,7 +628,6 @@ window.viewReceipt = () => {
         `).join('');
     }
     
-    // 4. Display the Receipt Overlay
     const overlay = document.getElementById('receiptModalOverlay');
     const content = document.getElementById('receiptModalContent');
     
