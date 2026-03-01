@@ -79,7 +79,6 @@ window.navigateTo = (sectionId) => {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.getElementById(sectionId + '-section').classList.add('active');
     
-    // Smooth scroll to top when changing sections entirely
     if(sectionId !== 'home') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -90,13 +89,12 @@ window.toggleMobileMenu = () => {
     nav.classList.toggle('open');
 };
 
-// Add this to automatically close the mobile menu when a link is clicked
 document.querySelectorAll('.mobile-nav a').forEach(link => {
     link.addEventListener('click', () => {
         document.getElementById('mobileNav').classList.remove('open');
     });
 });
-// Intersection Observer for Fade-In Effects
+
 const observeElements = () => {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -394,35 +392,51 @@ window.updateCartUI = () => {
     const subtotalEl = document.getElementById('cartSubtotal');
     const discountEl = document.getElementById('cartDiscount');
     const totalEl = document.getElementById('cartTotal');
+    const promoRow = document.getElementById('promoRow');
+    const promoAmountEl = document.getElementById('promoAmount');
     
-    const items = window.cartState.items;
-    let totalQty = 0; let subtotal = 0;
-    items.forEach(item => { totalQty += item.qty; subtotal += (item.price * item.qty); });
+    if (!container) return;
 
-    countBadge.innerText = totalQty;
-    countBadge.classList.toggle('active', totalQty > 0);
+    const items = window.cartState.items || [];
+    const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
+    const subtotal = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+    if (countBadge) {
+        countBadge.innerText = totalQty;
+        countBadge.classList.toggle('active', totalQty > 0);
+    }
 
     if (items.length === 0) {
-        container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-basket-shopping" style="font-size: 2.5rem; opacity: 0.3; margin-bottom: 16px;"></i><p>Your cart is empty.</p></div>';
+        container.innerHTML = `
+            <div class="empty-cart-view">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <p>Your sanctuary is currently empty.</p>
+                <button class="btn btn-outline" onclick="window.toggleCart()">Continue Shopping</button>
+            </div>`;
+        
         if (subtotalEl) {
-            subtotalEl.innerText = '$0.00'; discountEl.innerText = '-$0.00'; totalEl.innerText = '$0.00';
-            document.getElementById('promoRow').style.display = 'none';
+            subtotalEl.innerText = '$0.00'; 
+            if (discountEl) discountEl.innerText = '-$0.00'; 
+            if (totalEl) totalEl.innerText = '$0.00';
+            if (promoRow) promoRow.style.display = 'none';
         }
         return;
     }
 
     container.innerHTML = items.map(item => `
         <div class="cart-item">
-            <img src="${item.img}" class="cart-item-img" alt="${item.title}">
+            <img src="${item.img}" class="cart-item-img" alt="${item.title} product image">
             <div class="cart-item-info">
                 <div class="cart-item-title">${item.title}</div>
+                <div class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</div>
+                
                 <div class="cart-item-actions">
-                    <div class="qty-controls">
-                        <button type="button" class="qty-btn" onclick="window.updateQuantity(${item.id}, -1)">−</button>
-                        <span>${item.qty}</span>
-                        <button type="button" class="qty-btn" onclick="window.updateQuantity(${item.id}, 1)">+</button>
+                    <div class="qty-controls" aria-label="Quantity controls">
+                        <button type="button" class="qty-btn" aria-label="Decrease quantity" onclick="window.updateQuantity(${item.id}, -1)">−</button>
+                        <span class="qty-val">${item.qty}</span>
+                        <button type="button" class="qty-btn" aria-label="Increase quantity" onclick="window.updateQuantity(${item.id}, 1)">+</button>
                     </div>
-                    <div class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</div>
+                    <button type="button" class="remove-btn" aria-label="Remove item" onclick="window.updateQuantity(${item.id}, -${item.qty})">Remove</button>
                 </div>
             </div>
         </div>`).join('');
@@ -430,11 +444,9 @@ window.updateCartUI = () => {
     if (subtotalEl) {
         const ecoDiscount = subtotal * 0.05;
         let promoDiscount = 0;
-        const promoRow = document.getElementById('promoRow');
-        const promoAmountEl = document.getElementById('promoAmount');
 
         if (window.cartState.promoApplied) {
-            promoDiscount = subtotal * 0.10;
+            promoDiscount = subtotal * 0.10; 
             if (promoRow) promoRow.style.display = 'flex';
             if (promoAmountEl) promoAmountEl.innerText = '-$' + promoDiscount.toFixed(2);
         } else {
@@ -442,95 +454,167 @@ window.updateCartUI = () => {
         }
 
         const finalTotal = subtotal - ecoDiscount - promoDiscount;
+        
         subtotalEl.innerText = '$' + subtotal.toFixed(2);
-        discountEl.innerText = '-$' + ecoDiscount.toFixed(2);
-        totalEl.innerText = '$' + Math.max(0, finalTotal).toFixed(2);
+        if (discountEl) discountEl.innerText = '-$' + ecoDiscount.toFixed(2);
+        if (totalEl) totalEl.innerText = '$' + Math.max(0, finalTotal).toFixed(2);
     }
 };
 
-// === 9. Secure Checkout & Receipt ===
+// === 9. Secure Checkout ===
 window.openCheckout = () => {
-    const items = window.cartState.items;
-    if (items.length === 0) return alert("Your cart is empty!");
+    const items = window.cartState.items || [];
+    if (items.length === 0) {
+        console.warn("Attempted to checkout with an empty cart.");
+        return; 
+    }
     
     window.toggleCart(false);
     window.navigateTo('checkout');
     
     const saveCardBox = document.getElementById('saveCardCheckbox');
-    if (saveCardBox) saveCardBox.checked = window.userPrefsState.saveCard;
+    if (saveCardBox) {
+        saveCardBox.checked = !!window.userPrefsState.saveCard;
+    }
     
     const summaryContainer = document.getElementById('checkoutSummaryItems');
-    summaryContainer.innerHTML = items.map(i => `
-        <div class="summary-item-row">
-            <span>${i.qty}x ${i.title}</span>
-            <span style="font-weight: 600;">$${(i.price * i.qty).toFixed(2)}</span>
-        </div>
-    `).join('');
+    if (summaryContainer) {
+        summaryContainer.innerHTML = items.map(item => `
+            <div class="summary-item-row">
+                <span class="text-muted">${item.qty}x ${item.title}</span>
+                <span style="font-weight: 600; color: var(--text-dark);">$${(item.price * item.qty).toFixed(2)}</span>
+            </div>
+        `).join('');
+    }
 
-    document.getElementById('checkoutFinalTotal').innerText = document.getElementById('cartTotal').innerText;
+    const cartTotalEl = document.getElementById('cartTotal');
+    const checkoutTotalEl = document.getElementById('checkoutFinalTotal');
+    if (cartTotalEl && checkoutTotalEl) {
+        checkoutTotalEl.innerText = cartTotalEl.innerText;
+    }
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 window.processSimulatedOrder = (event) => {
-    event.preventDefault();
+    event.preventDefault(); 
+    
     const btn = document.getElementById('payBtn');
-    window.userPrefsState.saveCard = document.getElementById('saveCardCheckbox').checked;
+    const saveCardBox = document.getElementById('saveCardCheckbox');
+    const cartTotalEl = document.getElementById('cartTotal');
+    
+    if (!btn || !cartTotalEl) return;
+
+    if (saveCardBox) {
+        window.userPrefsState.saveCard = saveCardBox.checked;
+    }
     
     btn.disabled = true;
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="margin-right: 8px;"></i> Securing Payment...';
+    btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" style="margin-right: 8px;"></i> Processing Payment...';
 
     setTimeout(() => {
+        const currentDate = new Intl.DateTimeFormat('en-US', { 
+            year: 'numeric', month: 'long', day: 'numeric' 
+        }).format(new Date());
+
         window.lastOrderSnapshot = {
-            items: [...window.cartState.items],
-            total: document.getElementById('cartTotal').innerText,
-            date: new Date().toLocaleString()
+            orderId: `ORD-${Math.floor(100000 + Math.random() * 900000)}`,
+            items: JSON.parse(JSON.stringify(window.cartState.items)), 
+            total: cartTotalEl.innerText,
+            date: currentDate
         };
 
         window.cartState.items = [];
         window.cartState.promoApplied = false;
         
-        document.getElementById('orderConfirmation').style.display = 'flex';
+        const confirmModal = document.getElementById('orderConfirmation');
+        if (confirmModal) {
+            confirmModal.style.display = 'flex';
+        }
         
         btn.disabled = false;
         btn.innerHTML = 'Confirm & Pay';
+        if (event.target && typeof event.target.reset === 'function') {
+            event.target.reset(); 
+        }
+
     }, 2000);
 };
 
+
+// === 10. MODAL GLOBAL LOGIC (Fix for the overlapping receipt and routing issue) ===
+window.continueShopping = () => {
+    // 1. Hide the green confirmation modal
+    const confirmModal = document.getElementById('orderConfirmation');
+    if (confirmModal) confirmModal.style.display = 'none';
+    
+    // 2. Safely route back to the home page instead of staying on checkout
+    window.navigateTo('home');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
 window.viewReceipt = () => {
-    if (!window.lastOrderSnapshot) return;
     const order = window.lastOrderSnapshot;
+    if (!order) {
+        console.error("Order snapshot missing.");
+        return; 
+    }
+
+    // 1. HIDE THE GREEN CONFIRMATION MODAL (Prevents z-index overlap)
+    const confirmModal = document.getElementById('orderConfirmation');
+    if (confirmModal) confirmModal.style.display = 'none';
+
+    // 2. NAVIGATE AWAY FROM CHECKOUT (So you don't see it behind the receipt)
+    window.navigateTo('home');
+
+    // 3. Inject Data Securely
+    const setElText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = text;
+    };
+
+    setElText('receiptDate', order.date);
+    setElText('receiptOrderNum', order.orderId);
+    setElText('receiptTotal', order.total);
     
-    document.getElementById('receiptDate').innerText = order.date.split(',')[0];
-    document.getElementById('receiptOrderNum').innerText = `Order #${Math.floor(100000 + Math.random() * 900000)}`;
+    const receiptItemsContainer = document.getElementById('receiptItems');
+    if (receiptItemsContainer) {
+        receiptItemsContainer.innerHTML = order.items.map(i => `
+            <div class="receipt-item-row">
+                <span class="text-muted">${i.qty}x ${i.title}</span>
+                <span style="font-weight: 500; color: var(--text-dark);">$${(i.price * i.qty).toFixed(2)}</span>
+            </div>
+        `).join('');
+    }
     
-    document.getElementById('receiptItems').innerHTML = order.items.map(i => `
-        <div class="receipt-item-row">
-            <span>${i.qty}x ${i.title}</span>
-            <span>$${(i.price * i.qty).toFixed(2)}</span>
-        </div>
-    `).join('');
-    
-    document.getElementById('receiptTotal').innerText = order.total;
-    
+    // 4. Display the Receipt Overlay
     const overlay = document.getElementById('receiptModalOverlay');
     const content = document.getElementById('receiptModalContent');
-    overlay.style.display = 'flex';
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
+    
+    if (overlay && content) {
+        overlay.style.display = 'flex';
+        setTimeout(() => {
             overlay.style.opacity = '1';
             content.style.transform = 'translateY(0)';
-        });
-    });
+        }, 10);
+    }
 };
 
 window.closeReceipt = () => {
     const overlay = document.getElementById('receiptModalOverlay');
     const content = document.getElementById('receiptModalContent');
-    overlay.style.opacity = '0';
-    content.style.transform = 'translateY(20px)';
-    setTimeout(() => { overlay.style.display = 'none'; }, 300);
+    
+    if (overlay && content) {
+        overlay.style.opacity = '0';
+        content.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => { 
+            overlay.style.display = 'none'; 
+        }, 300);
+    }
 };
 
-// === Initialize Initialization ===
+// === 11. Initialization ===
 document.addEventListener('DOMContentLoaded', () => {
     const searchBar = document.getElementById('discoverSearch');
     if(searchBar) searchBar.addEventListener('input', window.applyFilters);
